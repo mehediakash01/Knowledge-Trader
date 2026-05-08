@@ -31,6 +31,8 @@ model SkillPost {
   id               String   @id @default(uuid())
   title            String
   slug             String   @unique
+  category         String   @default("General")
+  tags             String[] @default([])
   shortDescription String
   longDescription  String   @db.Text
   previewContent   Json

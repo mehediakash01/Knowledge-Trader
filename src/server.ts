@@ -1,14 +1,13 @@
 import "dotenv/config";
 import app from "./app";
+import config from "./config";
 import { prisma } from "../lib/prisma";
-
-const port = 5000;
 
 async function main() {
   await prisma.$connect();
 
-  app.listen(port, () => {
-    console.log(`Knowledge Trader server is running on port ${port}`);
+  app.listen(config.port, () => {
+    console.log(`Knowledge Trader server is running on port ${config.port}`);
   });
 }
 

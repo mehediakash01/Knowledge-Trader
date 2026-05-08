@@ -22,6 +22,8 @@ async function main() {
     create: {
       title: "Advanced Microservices with Go",
       slug: "advanced-go-microservices",
+      category: "Backend Development",
+      tags: ["go", "microservices", "grpc"],
       shortDescription: "Learn to build scalable, distributed systems using Go and gRPC.",
       longDescription: "### What you will learn\n- Service discovery\n- Circuit breakers\n- Distributed tracing with Jaeger...",
       tokenPrice: 15,

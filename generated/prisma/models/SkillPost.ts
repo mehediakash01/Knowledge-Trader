@@ -38,6 +38,7 @@ export type SkillPostMinAggregateOutputType = {
   id: string | null
   title: string | null
   slug: string | null
+  category: string | null
   shortDescription: string | null
   longDescription: string | null
   tokenPrice: number | null
@@ -48,6 +49,7 @@ export type SkillPostMaxAggregateOutputType = {
   id: string | null
   title: string | null
   slug: string | null
+  category: string | null
   shortDescription: string | null
   longDescription: string | null
   tokenPrice: number | null
@@ -58,6 +60,8 @@ export type SkillPostCountAggregateOutputType = {
   id: number
   title: number
   slug: number
+  category: number
+  tags: number
   shortDescription: number
   longDescription: number
   previewContent: number
@@ -81,6 +85,7 @@ export type SkillPostMinAggregateInputType = {
   id?: true
   title?: true
   slug?: true
+  category?: true
   shortDescription?: true
   longDescription?: true
   tokenPrice?: true
@@ -91,6 +96,7 @@ export type SkillPostMaxAggregateInputType = {
   id?: true
   title?: true
   slug?: true
+  category?: true
   shortDescription?: true
   longDescription?: true
   tokenPrice?: true
@@ -101,6 +107,8 @@ export type SkillPostCountAggregateInputType = {
   id?: true
   title?: true
   slug?: true
+  category?: true
+  tags?: true
   shortDescription?: true
   longDescription?: true
   previewContent?: true
@@ -201,6 +209,8 @@ export type SkillPostGroupByOutputType = {
   id: string
   title: string
   slug: string
+  category: string
+  tags: string[]
   shortDescription: string
   longDescription: string
   previewContent: runtime.JsonValue
@@ -237,6 +247,8 @@ export type SkillPostWhereInput = {
   id?: Prisma.StringFilter<"SkillPost"> | string
   title?: Prisma.StringFilter<"SkillPost"> | string
   slug?: Prisma.StringFilter<"SkillPost"> | string
+  category?: Prisma.StringFilter<"SkillPost"> | string
+  tags?: Prisma.StringNullableListFilter<"SkillPost">
   shortDescription?: Prisma.StringFilter<"SkillPost"> | string
   longDescription?: Prisma.StringFilter<"SkillPost"> | string
   previewContent?: Prisma.JsonFilter<"SkillPost">
@@ -252,6 +264,8 @@ export type SkillPostOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   longDescription?: Prisma.SortOrder
   previewContent?: Prisma.SortOrder
@@ -270,6 +284,8 @@ export type SkillPostWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SkillPostWhereInput[]
   NOT?: Prisma.SkillPostWhereInput | Prisma.SkillPostWhereInput[]
   title?: Prisma.StringFilter<"SkillPost"> | string
+  category?: Prisma.StringFilter<"SkillPost"> | string
+  tags?: Prisma.StringNullableListFilter<"SkillPost">
   shortDescription?: Prisma.StringFilter<"SkillPost"> | string
   longDescription?: Prisma.StringFilter<"SkillPost"> | string
   previewContent?: Prisma.JsonFilter<"SkillPost">
@@ -285,6 +301,8 @@ export type SkillPostOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   longDescription?: Prisma.SortOrder
   previewContent?: Prisma.SortOrder
@@ -306,6 +324,8 @@ export type SkillPostScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"SkillPost"> | string
   title?: Prisma.StringWithAggregatesFilter<"SkillPost"> | string
   slug?: Prisma.StringWithAggregatesFilter<"SkillPost"> | string
+  category?: Prisma.StringWithAggregatesFilter<"SkillPost"> | string
+  tags?: Prisma.StringNullableListFilter<"SkillPost">
   shortDescription?: Prisma.StringWithAggregatesFilter<"SkillPost"> | string
   longDescription?: Prisma.StringWithAggregatesFilter<"SkillPost"> | string
   previewContent?: Prisma.JsonWithAggregatesFilter<"SkillPost">
@@ -319,6 +339,8 @@ export type SkillPostCreateInput = {
   id?: string
   title: string
   slug: string
+  category?: string
+  tags?: Prisma.SkillPostCreatetagsInput | string[]
   shortDescription: string
   longDescription: string
   previewContent: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -333,6 +355,8 @@ export type SkillPostUncheckedCreateInput = {
   id?: string
   title: string
   slug: string
+  category?: string
+  tags?: Prisma.SkillPostCreatetagsInput | string[]
   shortDescription: string
   longDescription: string
   previewContent: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -347,6 +371,8 @@ export type SkillPostUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.SkillPostUpdatetagsInput | string[]
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   longDescription?: Prisma.StringFieldUpdateOperationsInput | string
   previewContent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -361,6 +387,8 @@ export type SkillPostUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.SkillPostUpdatetagsInput | string[]
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   longDescription?: Prisma.StringFieldUpdateOperationsInput | string
   previewContent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -375,6 +403,8 @@ export type SkillPostCreateManyInput = {
   id?: string
   title: string
   slug: string
+  category?: string
+  tags?: Prisma.SkillPostCreatetagsInput | string[]
   shortDescription: string
   longDescription: string
   previewContent: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -388,6 +418,8 @@ export type SkillPostUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.SkillPostUpdatetagsInput | string[]
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   longDescription?: Prisma.StringFieldUpdateOperationsInput | string
   previewContent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -400,6 +432,8 @@ export type SkillPostUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.SkillPostUpdatetagsInput | string[]
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   longDescription?: Prisma.StringFieldUpdateOperationsInput | string
   previewContent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -423,6 +457,8 @@ export type SkillPostCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  tags?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   longDescription?: Prisma.SortOrder
   previewContent?: Prisma.SortOrder
@@ -440,6 +476,7 @@ export type SkillPostMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  category?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   longDescription?: Prisma.SortOrder
   tokenPrice?: Prisma.SortOrder
@@ -450,6 +487,7 @@ export type SkillPostMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  category?: Prisma.SortOrder
   shortDescription?: Prisma.SortOrder
   longDescription?: Prisma.SortOrder
   tokenPrice?: Prisma.SortOrder
@@ -507,8 +545,17 @@ export type SkillPostUncheckedUpdateManyWithoutCreatorNestedInput = {
   deleteMany?: Prisma.SkillPostScalarWhereInput | Prisma.SkillPostScalarWhereInput[]
 }
 
+export type SkillPostCreatetagsInput = {
+  set: string[]
+}
+
 export type SkillPostCreateimagesInput = {
   set: string[]
+}
+
+export type SkillPostUpdatetagsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type SkillPostUpdateimagesInput = {
@@ -534,6 +581,8 @@ export type SkillPostCreateWithoutCreatorInput = {
   id?: string
   title: string
   slug: string
+  category?: string
+  tags?: Prisma.SkillPostCreatetagsInput | string[]
   shortDescription: string
   longDescription: string
   previewContent: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -547,6 +596,8 @@ export type SkillPostUncheckedCreateWithoutCreatorInput = {
   id?: string
   title: string
   slug: string
+  category?: string
+  tags?: Prisma.SkillPostCreatetagsInput | string[]
   shortDescription: string
   longDescription: string
   previewContent: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -589,6 +640,8 @@ export type SkillPostScalarWhereInput = {
   id?: Prisma.StringFilter<"SkillPost"> | string
   title?: Prisma.StringFilter<"SkillPost"> | string
   slug?: Prisma.StringFilter<"SkillPost"> | string
+  category?: Prisma.StringFilter<"SkillPost"> | string
+  tags?: Prisma.StringNullableListFilter<"SkillPost">
   shortDescription?: Prisma.StringFilter<"SkillPost"> | string
   longDescription?: Prisma.StringFilter<"SkillPost"> | string
   previewContent?: Prisma.JsonFilter<"SkillPost">
@@ -602,6 +655,8 @@ export type SkillPostCreateWithoutTradesInput = {
   id?: string
   title: string
   slug: string
+  category?: string
+  tags?: Prisma.SkillPostCreatetagsInput | string[]
   shortDescription: string
   longDescription: string
   previewContent: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -615,6 +670,8 @@ export type SkillPostUncheckedCreateWithoutTradesInput = {
   id?: string
   title: string
   slug: string
+  category?: string
+  tags?: Prisma.SkillPostCreatetagsInput | string[]
   shortDescription: string
   longDescription: string
   previewContent: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -644,6 +701,8 @@ export type SkillPostUpdateWithoutTradesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.SkillPostUpdatetagsInput | string[]
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   longDescription?: Prisma.StringFieldUpdateOperationsInput | string
   previewContent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -657,6 +716,8 @@ export type SkillPostUncheckedUpdateWithoutTradesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.SkillPostUpdatetagsInput | string[]
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   longDescription?: Prisma.StringFieldUpdateOperationsInput | string
   previewContent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -670,6 +731,8 @@ export type SkillPostCreateManyCreatorInput = {
   id?: string
   title: string
   slug: string
+  category?: string
+  tags?: Prisma.SkillPostCreatetagsInput | string[]
   shortDescription: string
   longDescription: string
   previewContent: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -682,6 +745,8 @@ export type SkillPostUpdateWithoutCreatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.SkillPostUpdatetagsInput | string[]
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   longDescription?: Prisma.StringFieldUpdateOperationsInput | string
   previewContent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -695,6 +760,8 @@ export type SkillPostUncheckedUpdateWithoutCreatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.SkillPostUpdatetagsInput | string[]
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   longDescription?: Prisma.StringFieldUpdateOperationsInput | string
   previewContent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -708,6 +775,8 @@ export type SkillPostUncheckedUpdateManyWithoutCreatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.SkillPostUpdatetagsInput | string[]
   shortDescription?: Prisma.StringFieldUpdateOperationsInput | string
   longDescription?: Prisma.StringFieldUpdateOperationsInput | string
   previewContent?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -751,6 +820,8 @@ export type SkillPostSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   title?: boolean
   slug?: boolean
+  category?: boolean
+  tags?: boolean
   shortDescription?: boolean
   longDescription?: boolean
   previewContent?: boolean
@@ -767,6 +838,8 @@ export type SkillPostSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   title?: boolean
   slug?: boolean
+  category?: boolean
+  tags?: boolean
   shortDescription?: boolean
   longDescription?: boolean
   previewContent?: boolean
@@ -781,6 +854,8 @@ export type SkillPostSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   title?: boolean
   slug?: boolean
+  category?: boolean
+  tags?: boolean
   shortDescription?: boolean
   longDescription?: boolean
   previewContent?: boolean
@@ -795,6 +870,8 @@ export type SkillPostSelectScalar = {
   id?: boolean
   title?: boolean
   slug?: boolean
+  category?: boolean
+  tags?: boolean
   shortDescription?: boolean
   longDescription?: boolean
   previewContent?: boolean
@@ -804,7 +881,7 @@ export type SkillPostSelectScalar = {
   creatorId?: boolean
 }
 
-export type SkillPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "shortDescription" | "longDescription" | "previewContent" | "lockedContent" | "tokenPrice" | "images" | "creatorId", ExtArgs["result"]["skillPost"]>
+export type SkillPostOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "category" | "tags" | "shortDescription" | "longDescription" | "previewContent" | "lockedContent" | "tokenPrice" | "images" | "creatorId", ExtArgs["result"]["skillPost"]>
 export type SkillPostInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   trades?: boolean | Prisma.SkillPost$tradesArgs<ExtArgs>
@@ -827,6 +904,8 @@ export type $SkillPostPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: string
     title: string
     slug: string
+    category: string
+    tags: string[]
     shortDescription: string
     longDescription: string
     previewContent: runtime.JsonValue
@@ -1262,6 +1341,8 @@ export interface SkillPostFieldRefs {
   readonly id: Prisma.FieldRef<"SkillPost", 'String'>
   readonly title: Prisma.FieldRef<"SkillPost", 'String'>
   readonly slug: Prisma.FieldRef<"SkillPost", 'String'>
+  readonly category: Prisma.FieldRef<"SkillPost", 'String'>
+  readonly tags: Prisma.FieldRef<"SkillPost", 'String[]'>
   readonly shortDescription: Prisma.FieldRef<"SkillPost", 'String'>
   readonly longDescription: Prisma.FieldRef<"SkillPost", 'String'>
   readonly previewContent: Prisma.FieldRef<"SkillPost", 'Json'>

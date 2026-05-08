@@ -92,6 +92,8 @@ export const SkillPostScalarFieldEnum = {
   id: 'id',
   title: 'title',
   slug: 'slug',
+  category: 'category',
+  tags: 'tags',
   shortDescription: 'shortDescription',
   longDescription: 'longDescription',
   previewContent: 'previewContent',

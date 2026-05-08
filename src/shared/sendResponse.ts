@@ -17,6 +17,7 @@ type TResponse<T> = {
 const sendResponse = <T>(res: Response, data: TResponse<T>): void => {
   const responseData = {
     success: data.success,
+    statusCode: data.statusCode,
     message: data.message,
     meta: data.meta,
     data: data.data,
