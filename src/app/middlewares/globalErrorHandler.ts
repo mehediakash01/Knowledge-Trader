@@ -2,6 +2,7 @@ import { ErrorRequestHandler } from "express";
 import { ZodError } from "zod";
 import { Prisma } from "../../../generated/prisma/client";
 import AppError from "../../errors/AppError";
+import logger from "../../shared/logger";
 
 type TErrorSource = {
   path: string | number;
@@ -97,6 +98,13 @@ const globalErrorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
     message = error.message;
     errorSources = [{ path: "", message: error.message }];
   }
+
+  logger.error({
+    message,
+    statusCode,
+    errorSources,
+    stack: error instanceof Error ? error.stack : undefined,
+  });
 
   res.status(statusCode).json({
     success: false,

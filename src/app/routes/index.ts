@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { AuthRoutes } from "../modules/auth/auth.routes";
 import { AIRoutes } from "../modules/AI/ai.routes";
+import { AnalyticsRoutes } from "../modules/analytics/analytics.routes";
+import { NotificationRoutes } from "../modules/notification/notification.routes";
+import { ReviewRoutes } from "../modules/review/review.routes";
 import { SkillPostRoutes } from "../modules/skillPost/skillPost.routes";
 import { TradeRoutes } from "../modules/trade/trade.routes";
 import { UserRoutes } from "../modules/user/user.routes";
@@ -19,6 +22,18 @@ const moduleRoutes = [
   {
     path: "/ai",
     route: AIRoutes,
+  },
+  {
+    path: "/analytics",
+    route: AnalyticsRoutes,
+  },
+  {
+    path: "/notifications",
+    route: NotificationRoutes,
+  },
+  {
+    path: "/reviews",
+    route: ReviewRoutes,
   },
   {
     path: "/skill-posts",
