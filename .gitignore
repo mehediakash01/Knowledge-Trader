@@ -61,7 +61,8 @@ coverage/
 *.lcov
 
 # Generated
-/src/generated/prisma
+/generated/prisma/
+/src/generated/prisma/
 .prisma/
 
 # Runtime
