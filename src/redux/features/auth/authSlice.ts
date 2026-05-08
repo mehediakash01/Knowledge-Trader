@@ -1,8 +1,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 import {
-  removeAuthTokens,
+  clearAuthStorage,
+  removeAuthUser,
   setAuthTokens,
+  setAuthUser,
 } from "@/services/auth.service";
 import type { IAuthPayload, IAuthState, IUser } from "@/types/auth";
 
@@ -24,6 +26,12 @@ const authSlice = createSlice({
 
       if (user !== undefined) {
         state.user = user;
+
+        if (user) {
+          setAuthUser(user);
+        } else {
+          removeAuthUser();
+        }
       }
 
       if (accessToken !== undefined) {
@@ -41,7 +49,7 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
 
-      removeAuthTokens();
+      clearAuthStorage();
     },
   },
 });

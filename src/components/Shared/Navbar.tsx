@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { BookOpenText, ChevronDown, Menu, UserRound } from "lucide-react";
+import { toast } from "sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/UI/avatar";
 import { Button } from "@/components/UI/button";
@@ -14,7 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/UI/dropdown-menu";
 import { ThemeToggle } from "@/components/Shared/ThemeToggle";
-import { useAppSelector } from "@/redux/hooks";
+import { logout } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const navItems = [
   { href: "#skills", label: "Explore" },
@@ -33,8 +36,16 @@ const getInitials = (name?: string, email?: string) => {
 };
 
 export function Navbar() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
   const ktBalance = user?.ktBalance ?? 0;
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success("Logged out successfully");
+    router.push("/login");
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/20 bg-slate-50/75 backdrop-blur-2xl dark:border-white/10 dark:bg-zinc-950/70">
@@ -89,9 +100,15 @@ export function Navbar() {
                 <DropdownMenuContent align="end" className="w-52">
                   <DropdownMenuLabel>User Profile</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>My Trades</DropdownMenuItem>
                   <DropdownMenuItem>Wallet</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Logout
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -130,6 +147,9 @@ export function Navbar() {
                   <DropdownMenuItem>
                     <UserRound className="size-4" />
                     User Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    Logout
                   </DropdownMenuItem>
                 </>
               ) : (

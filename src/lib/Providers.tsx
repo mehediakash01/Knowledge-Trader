@@ -7,7 +7,13 @@ import { Provider } from "react-redux";
 import { setCredentials } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { store } from "@/redux/store";
-import { getAccessToken, getRefreshToken } from "@/services/auth.service";
+import { Toaster } from "@/components/UI/sonner";
+import {
+  getAccessToken,
+  getAuthUser,
+  getRefreshToken,
+} from "@/services/auth.service";
+import type { IUser } from "@/types/auth";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -24,6 +30,7 @@ export function Providers({ children }: ProvidersProps) {
       >
         <AuthStateHydrator />
         {children}
+        <Toaster richColors position="top-right" />
       </ThemeProvider>
     </Provider>
   );
@@ -35,6 +42,7 @@ function AuthStateHydrator() {
   useEffect(() => {
     dispatch(
       setCredentials({
+        user: getAuthUser<IUser>(),
         accessToken: getAccessToken(),
         refreshToken: getRefreshToken(),
       })

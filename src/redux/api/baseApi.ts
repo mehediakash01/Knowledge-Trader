@@ -19,7 +19,7 @@ export const baseApi = createApi({
       const token = getAccessToken();
 
       if (token) {
-        headers.set("authorization", token);
+        headers.set("authorization", `Bearer ${token}`);
       }
 
       return headers;
