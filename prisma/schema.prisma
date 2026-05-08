@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+}
+enum Role {
+  USER
+  ADMIN
+  MANAGER
+}
+
+model User {
+  id              String    @id @default(uuid())
+  name            String
+  email           String    @unique
+  password        String
+  role            Role      @default(USER)
+  tokenBalance    Int       @default(10)
+  reputationScore Float     @default(0.0)
+  expertise       String[]
+  interests       String[]
+  posts           SkillPost[]
+  tradesAsLearner Trade[]     @relation("Learner")
+  tradesAsTeacher Trade[]     @relation("Teacher")
+  transactions    Transaction[]
+}
+
+model SkillPost {
+  id               String   @id @default(uuid())
+  title            String
+  slug             String   @unique
+  shortDescription String
+  longDescription  String   @db.Text
+  previewContent   Json
+  lockedContent    Json
+  tokenPrice       Int
+  images           String[]
+  creatorId        String
+  creator          User     @relation(fields: [creatorId], references: [id])
+  trades           Trade[]
+}
+
+model Trade {
+  id          String   @id @default(uuid())
+  postId      String
+  post        SkillPost @relation(fields: [postId], references: [id])
+  learnerId   String
+  learner     User     @relation("Learner", fields: [learnerId], references: [id])
+  teacherId   String
+  teacher     User     @relation("Teacher", fields: [teacherId], references: [id])
+  status      String   @default("PENDING") // PENDING, ACCEPTED, COMPLETED
+  transaction Transaction?
+}
+
+model Transaction {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  tradeId   String?  @unique
+  trade     Trade?   @relation(fields: [tradeId], references: [id])
+  amount    Int
+  type      String   // DEBIT, CREDIT
+  createdAt DateTime @default(now())
+}
