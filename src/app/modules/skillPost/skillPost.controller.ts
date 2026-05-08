@@ -38,7 +38,10 @@ const getAllSkillPosts = catchAsync(async (req, res) => {
 });
 
 const getSingleSkillPost = catchAsync(async (req, res) => {
-  const result = await SkillPostServices.getSingleSkillPost(String(req.params.id));
+  const result = await SkillPostServices.getSingleSkillPost(
+    String(req.params.id),
+    req.user?.id,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -25,6 +25,7 @@ model User {
   tradesAsLearner Trade[]     @relation("Learner")
   tradesAsTeacher Trade[]     @relation("Teacher")
   transactions    Transaction[]
+  notifications   Notification[]
 }
 
 model SkillPost {
@@ -64,5 +65,15 @@ model Transaction {
   trade     Trade?   @relation(fields: [tradeId], references: [id])
   amount    Int
   type      String   // DEBIT, CREDIT
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 }

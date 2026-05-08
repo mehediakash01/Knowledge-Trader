@@ -129,7 +129,7 @@ const getAllSkillPosts = async (
   };
 };
 
-const getSingleSkillPost = async (id: string) => {
+const getSingleSkillPost = async (id: string, userId?: string) => {
   const result = await prisma.skillPost.findUnique({
     where: {
       id,
@@ -149,6 +149,28 @@ const getSingleSkillPost = async (id: string) => {
 
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, "Skill post not found");
+  }
+
+  const hasCompletedTrade = userId
+    ? await prisma.trade.findFirst({
+        where: {
+          postId: id,
+          learnerId: userId,
+          status: "COMPLETED",
+        },
+        select: {
+          id: true,
+        },
+      })
+    : null;
+
+  const canAccessLockedContent =
+    Boolean(userId) &&
+    (result.creatorId === userId || Boolean(hasCompletedTrade));
+
+  if (!canAccessLockedContent) {
+    const { lockedContent: _lockedContent, ...publicResult } = result;
+    return publicResult;
   }
 
   return result;

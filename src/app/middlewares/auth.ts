@@ -58,4 +58,50 @@ const auth = (...requiredRoles: Role[]) => {
   });
 };
 
+export const optionalAuth = catchAsync(
+  async (req: Request, _res: Response, next: NextFunction) => {
+    const token = req.headers.authorization?.startsWith("Bearer ")
+      ? req.headers.authorization.split(" ")[1]
+      : undefined;
+
+    if (!token) {
+      next();
+      return;
+    }
+
+    const jwtSecret = config.jwt.accessSecret;
+
+    if (!jwtSecret) {
+      next();
+      return;
+    }
+
+    const decoded = jwtHelpers.verifyToken(token, jwtSecret);
+
+    if (
+      typeof decoded.id !== "string" ||
+      typeof decoded.email !== "string" ||
+      typeof decoded.role !== "string"
+    ) {
+      next();
+      return;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+      },
+    });
+
+    if (user) {
+      req.user = user;
+    }
+
+    next();
+  },
+);
+
 export default auth;

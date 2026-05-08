@@ -73,3 +73,4 @@ coverage/
 tmp/
 temp/
 *.tmp
+API_TESTING_GUIDE.md
