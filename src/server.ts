@@ -1,20 +1,18 @@
-import express, { Application, Request, Response } from "express";
+import "dotenv/config";
+import app from "./app";
+import { prisma } from "../lib/prisma";
 
-const app: Application = express();
-const port = 3000; // The port your express server will be running on.
+const port = 5000;
 
-// Enable URL-encoded form data parsing
-app.use(express.urlencoded({ extended: true }));
+async function main() {
+  await prisma.$connect();
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+  app.listen(port, () => {
+    console.log(`Knowledge Trader server is running on port ${port}`);
+  });
+}
 
-// Basic route
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, TypeScript + Express!');
-});
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
 });
