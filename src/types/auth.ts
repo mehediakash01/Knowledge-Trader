@@ -4,6 +4,7 @@ export interface IUser {
   email?: string;
   role?: string;
   image?: string;
+  ktBalance?: number;
 }
 
 export interface IAuthState {

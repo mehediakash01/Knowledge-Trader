@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
+import { ThemeProvider } from "next-themes";
 import { Provider } from "react-redux";
 
 import { setCredentials } from "@/redux/features/auth/authSlice";
@@ -15,8 +16,15 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
   return (
     <Provider store={store}>
-      <AuthStateHydrator />
-      {children}
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <AuthStateHydrator />
+        {children}
+      </ThemeProvider>
     </Provider>
   );
 }
