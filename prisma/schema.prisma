@@ -26,6 +26,7 @@ model User {
   tradesAsTeacher Trade[]     @relation("Teacher")
   transactions    Transaction[]
   notifications   Notification[]
+  reviews         Review[]
 }
 
 model SkillPost {
@@ -43,6 +44,7 @@ model SkillPost {
   creatorId        String
   creator          User     @relation(fields: [creatorId], references: [id])
   trades           Trade[]
+  reviews          Review[]
 }
 
 model Trade {
@@ -76,4 +78,15 @@ model Notification {
   message   String
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model Review {
+  id        String    @id @default(uuid())
+  postId    String
+  post      SkillPost @relation(fields: [postId], references: [id])
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  rating    Int
+  comment   String    @db.Text
+  createdAt DateTime  @default(now())
 }
