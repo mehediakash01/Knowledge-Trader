@@ -45,6 +45,12 @@ model SkillPost {
   creator          User     @relation(fields: [creatorId], references: [id])
   trades           Trade[]
   reviews          Review[]
+
+  @@index([category])
+  @@index([tokenPrice])
+  @@index([title])
+  @@index([slug])
+  @@index([category, tokenPrice])
 }
 
 model Trade {

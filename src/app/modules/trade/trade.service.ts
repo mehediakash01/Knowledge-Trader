@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import { prisma } from "../../../../lib/prisma";
 import AppError from "../../../errors/AppError";
+import { sendLiveNotification } from "../../../socket";
 
 const executeTokenTrade = async (learnerId: string, postId: string) => {
   const result = await prisma.$transaction(async (tx) => {
@@ -146,6 +147,8 @@ const executeTokenTrade = async (learnerId: string, postId: string) => {
       notification,
     };
   });
+
+  sendLiveNotification(result.notification.userId, result.notification);
 
   return result;
 };

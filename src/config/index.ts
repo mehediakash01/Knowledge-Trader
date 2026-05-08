@@ -2,6 +2,12 @@ import "dotenv/config";
 
 const config = {
   port: Number(process.env.PORT) || 5000,
+  cors: {
+    origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()) || [
+      "http://localhost:3000",
+      "http://localhost:5173",
+    ],
+  },
   jwt: {
     accessSecret: process.env.JWT_ACCESS_SECRET || process.env.JWT_SECRET,
     refreshSecret: process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,

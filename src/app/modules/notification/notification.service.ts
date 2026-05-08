@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import { prisma } from "../../../../lib/prisma";
 import AppError from "../../../errors/AppError";
+import { sendLiveNotification } from "../../../socket";
 
 type TCreateNotificationPayload = {
   userId: string;
@@ -12,6 +13,8 @@ const createNotification = async (payload: TCreateNotificationPayload) => {
   const result = await prisma.notification.create({
     data: payload,
   });
+
+  sendLiveNotification(payload.userId, result);
 
   return result;
 };
@@ -55,6 +58,8 @@ const markAsRead = async (id: string, userId: string) => {
       isRead: true,
     },
   });
+
+  sendLiveNotification(userId, result);
 
   return result;
 };

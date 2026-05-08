@@ -51,6 +51,28 @@ const getSingleSkillPost = catchAsync(async (req, res) => {
   });
 });
 
+const getCategories = catchAsync(async (_req, res) => {
+  const result = await SkillPostServices.getCategories();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Categories retrieved successfully",
+    data: result,
+  });
+});
+
+const getHomeFeed = catchAsync(async (_req, res) => {
+  const result = await SkillPostServices.getHomeFeed();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Home feed retrieved successfully",
+    data: result,
+  });
+});
+
 const updateSkillPost = catchAsync(async (req, res) => {
   const result = await SkillPostServices.updateSkillPost(
     String(req.params.id),
@@ -70,5 +92,7 @@ export const SkillPostControllers = {
   createSkillPost,
   getAllSkillPosts,
   getSingleSkillPost,
+  getCategories,
+  getHomeFeed,
   updateSkillPost,
 };

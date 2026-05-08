@@ -8,6 +8,8 @@ import { SkillPostValidation } from "./skillPost.validation";
 const router = Router();
 
 router.get("/", SkillPostControllers.getAllSkillPosts);
+router.get("/categories", SkillPostControllers.getCategories);
+router.get("/home-feed", SkillPostControllers.getHomeFeed);
 router.get("/:id", optionalAuth, SkillPostControllers.getSingleSkillPost);
 
 router.post(

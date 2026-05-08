@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import { prisma } from "../../../../lib/prisma";
 import AppError from "../../../errors/AppError";
+import { sendLiveNotification } from "../../../socket";
 
 type TCreateReviewPayload = {
   postId: string;
@@ -97,7 +98,7 @@ const createReview = async (userId: string, payload: TCreateReviewPayload) => {
       },
     });
 
-    await tx.notification.create({
+    const notification = await tx.notification.create({
       data: {
         userId: skillPost.creatorId,
         title: "New review received",
@@ -105,12 +106,13 @@ const createReview = async (userId: string, payload: TCreateReviewPayload) => {
       },
     });
 
-    return review;
+    return { review, notification };
   });
 
-  await updateCreatorReputation(result.post.creatorId);
+  await updateCreatorReputation(result.review.post.creatorId);
+  sendLiveNotification(result.notification.userId, result.notification);
 
-  return result;
+  return result.review;
 };
 
 export const ReviewServices = {

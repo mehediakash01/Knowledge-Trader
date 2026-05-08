@@ -3,6 +3,7 @@ import { Prisma } from "../../../../generated/prisma/client";
 import { prisma } from "../../../../lib/prisma";
 import AppError from "../../../errors/AppError";
 import { paginationHelper } from "../../../helpers/paginationHelper";
+import { cache } from "../../../shared/cache";
 import {
   TSkillPostCreateInput,
   TSkillPostFilters,
@@ -36,6 +37,8 @@ const createSkillPost = async (
       },
     },
   });
+
+  await cache.delByPrefix("skill-post:");
 
   return result;
 };
@@ -176,6 +179,82 @@ const getSingleSkillPost = async (id: string, userId?: string) => {
   return result;
 };
 
+const getCategories = async () => {
+  const cacheKey = "skill-post:categories";
+  const cached = await cache.get<string[]>(cacheKey);
+
+  if (cached) {
+    return cached;
+  }
+
+  const categories = await prisma.skillPost.findMany({
+    distinct: ["category"],
+    orderBy: {
+      category: "asc",
+    },
+    select: {
+      category: true,
+    },
+  });
+  const result = categories.map((item) => item.category);
+
+  await cache.set(cacheKey, result, 60 * 30);
+
+  return result;
+};
+
+const getHomeFeed = async () => {
+  const cacheKey = "skill-post:home-feed";
+  const cached = await cache.get(cacheKey);
+
+  if (cached) {
+    return cached;
+  }
+
+  const [featured, latest, categories] = await Promise.all([
+    prisma.skillPost.findMany({
+      take: 8,
+      orderBy: {
+        tokenPrice: "desc",
+      },
+      include: {
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            reputationScore: true,
+          },
+        },
+      },
+    }),
+    prisma.skillPost.findMany({
+      take: 8,
+      orderBy: {
+        title: "asc",
+      },
+      include: {
+        creator: {
+          select: {
+            id: true,
+            name: true,
+            reputationScore: true,
+          },
+        },
+      },
+    }),
+    getCategories(),
+  ]);
+  const result = {
+    featured,
+    latest,
+    categories,
+  };
+
+  await cache.set(cacheKey, result, 60 * 5);
+
+  return result;
+};
+
 const updateSkillPost = async (
   id: string,
   userId: string,
@@ -209,6 +288,8 @@ const updateSkillPost = async (
     data: payload,
   });
 
+  await cache.delByPrefix("skill-post:");
+
   return result;
 };
 
@@ -216,5 +297,7 @@ export const SkillPostServices = {
   createSkillPost,
   getAllSkillPosts,
   getSingleSkillPost,
+  getCategories,
+  getHomeFeed,
   updateSkillPost,
 };

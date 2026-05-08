@@ -22,12 +22,16 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "helmet": "^8.1.0",
     "http-status": "^2.1.0",
     "jsonwebtoken": "^9.0.3",
     "prisma": "^7.8.0",
     "redis": "^5.12.1",
+    "socket.io": "^4.8.3",
+    "swagger-ui-express": "^5.0.1",
     "tsup": "^8.5.1",
     "winston": "^3.19.0",
+    "xss": "^1.0.15",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -37,6 +41,7 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.6.2",
+    "@types/swagger-ui-express": "^4.1.8",
     "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
