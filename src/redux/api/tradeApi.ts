@@ -1,8 +1,20 @@
 import { baseApi } from "@/redux/api/baseApi";
 import type { IApiResponse, IMyTradesResponse } from "@/types";
 
+export interface IExecuteTokenTradePayload {
+  postId: string;
+}
+
 export const tradeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    executeTokenTrade: builder.mutation<void, IExecuteTokenTradePayload>({
+      query: (payload) => ({
+        url: "/trades/token-trade",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["trade", "skillPost", "user"],
+    }),
     getMyTrades: builder.query<IMyTradesResponse, void>({
       query: () => ({
         url: "/trades/my-trades",
@@ -15,4 +27,4 @@ export const tradeApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetMyTradesQuery } = tradeApi;
+export const { useGetMyTradesQuery, useExecuteTokenTradeMutation } = tradeApi;

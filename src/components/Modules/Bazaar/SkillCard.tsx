@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { BadgeCheck, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
 
 import { Card } from "@/components/UI/card";
@@ -102,6 +103,7 @@ export function SkillCard({ post, accessState }: SkillCardProps) {
       transition={{ type: "spring", stiffness: 320, damping: 24 }}
       className="group relative h-full"
     >
+      <Link href={`/bazaar/${post.id}`} className="absolute inset-0 z-10" aria-label={`View ${post.title}`} />
       <Card className="h-full overflow-hidden border-white/60 bg-white/85 p-0 shadow-[0_16px_42px_-20px_rgba(15,23,42,0.35)] ring-1 ring-blue-950/5 backdrop-blur-xl transition-shadow dark:border-white/10 dark:bg-zinc-950/70 dark:shadow-[0_20px_60px_-24px_rgba(34,211,238,0.2)]">
         <div className="relative aspect-16/10 overflow-hidden">
           <ThumbnailArt category={post.category} visual={visual} />
