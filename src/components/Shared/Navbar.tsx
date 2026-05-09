@@ -20,6 +20,7 @@ import { logout } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
 const navItems = [
+  { href: "/bazaar", label: "Bazaar" },
   { href: "#skills", label: "Explore" },
   { href: "#trades", label: "Trades" },
   { href: "#reviews", label: "Reviews" },
