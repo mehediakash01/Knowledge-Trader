@@ -57,6 +57,15 @@ function filterStateFromQuery(searchParams: ReturnType<typeof useSearchParams>) 
   return parseBazaarSearchParams(Object.fromEntries(searchParams.entries()));
 }
 
+const DEFAULT_CATEGORIES = [
+  "Development",
+  "Design",
+  "Business",
+  "Marketing",
+  "Data",
+  "AI",
+];
+
 export function BazaarPage() {
   const router = useRouter();
   const pathname = usePathname();
@@ -94,6 +103,10 @@ export function BazaarPage() {
   const skillPostQuery = useGetAllSkillPostsQuery(queryParams);
   const categoriesQuery = useGetCategoriesQuery();
   const tradesQuery = useGetMyTradesQuery(undefined, { skip: !user });
+
+  const activeCategories = categoriesQuery.data?.length 
+    ? categoriesQuery.data 
+    : DEFAULT_CATEGORIES;
 
   const purchasedPostIds = useMemo(() => {
     const completedTrades = tradesQuery.data?.learningTrades.filter(
@@ -227,7 +240,7 @@ export function BazaarPage() {
       <div className="mx-auto grid w-full max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:px-8">
         <aside className="hidden lg:block">
           <FilterPanel
-            categories={categoriesQuery.data ?? []}
+            categories={activeCategories}
             filters={parsedFilters}
             searchInput={searchInput}
             setSearchInput={setSearchInput}
@@ -285,7 +298,7 @@ export function BazaarPage() {
                     </div>
                     <div className="h-[calc(100%-4rem)] p-4">
                       <FilterPanel
-                        categories={categoriesQuery.data ?? []}
+                        categories={activeCategories}
                         filters={parsedFilters}
                         searchInput={searchInput}
                         setSearchInput={setSearchInput}
@@ -301,7 +314,7 @@ export function BazaarPage() {
 
                 <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/15 bg-blue-500/10 px-4 py-2 text-sm font-medium text-blue-700 dark:border-cyan-300/20 dark:bg-cyan-300/10 dark:text-cyan-200">
                   <LayoutGrid className="size-4" />
-                  {skillPostQuery.data?.meta.total ?? 0} listings
+                  Showing {skillPostQuery.data?.meta.total ?? 0} Skills
                 </div>
               </div>
             </div>
@@ -333,7 +346,7 @@ export function BazaarPage() {
             ) : null}
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-5 relative min-h-[400px]">
             {skillPostQuery.isLoading ? (
               <motion.div
                 variants={PAGE_ANIMATION}
@@ -341,7 +354,7 @@ export function BazaarPage() {
                 animate="visible"
                 className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
               >
-                {Array.from({ length: 8 }).map((_, index) => (
+                {Array.from({ length: 12 }).map((_, index) => (
                   <motion.div key={index} variants={ITEM_ANIMATION}>
                     <SkillCardSkeleton />
                   </motion.div>
@@ -349,23 +362,33 @@ export function BazaarPage() {
               </motion.div>
             ) : skillPostQuery.data?.data.length ? (
               <>
-                <AnimatePresence mode="popLayout">
-                  <motion.div
-                    variants={PAGE_ANIMATION}
-                    initial="hidden"
-                    animate="visible"
-                    className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
-                  >
-                    {skillPostQuery.data.data.map((post) => (
-                      <motion.div key={post.id} variants={ITEM_ANIMATION}>
-                        <SkillCard
-                          post={post}
-                          accessState={accessStateForPost(post.id, post.creatorId)}
-                        />
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                </AnimatePresence>
+                <div className="relative">
+                  {skillPostQuery.isFetching && !skillPostQuery.isLoading && (
+                    <div className="absolute inset-0 z-50 flex items-center justify-center rounded-[2rem] bg-slate-50/50 backdrop-blur-sm dark:bg-zinc-950/50">
+                      <RefreshCcw className="size-8 animate-spin text-blue-600 dark:text-cyan-400" />
+                    </div>
+                  )}
+                  <AnimatePresence mode="popLayout">
+                    <motion.div
+                      variants={PAGE_ANIMATION}
+                      initial="hidden"
+                      animate="visible"
+                      className={cn(
+                        "grid gap-5 sm:grid-cols-2 xl:grid-cols-3",
+                        skillPostQuery.isFetching && !skillPostQuery.isLoading ? "opacity-50 pointer-events-none" : ""
+                      )}
+                    >
+                      {skillPostQuery.data.data.map((post) => (
+                        <motion.div key={post.id} variants={ITEM_ANIMATION}>
+                          <SkillCard
+                            post={post}
+                            accessState={accessStateForPost(post.id, post.creatorId)}
+                          />
+                        </motion.div>
+                      ))}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
 
                 <BazaarPagination
                   page={skillPostQuery.data.meta.page}
@@ -500,8 +523,12 @@ function FilterPanel({
                   );
                 })
               ) : (
-                <div className="rounded-2xl border border-dashed border-white/60 bg-white/60 px-4 py-6 text-sm text-zinc-500 dark:border-white/10 dark:bg-zinc-950/40 dark:text-zinc-400">
-                  Loading categories...
+                <div className="space-y-2">
+                  <Skeleton className="h-11 w-full rounded-2xl bg-slate-200/70 dark:bg-zinc-800" />
+                  <Skeleton className="h-11 w-full rounded-2xl bg-slate-200/70 dark:bg-zinc-800" />
+                  <Skeleton className="h-11 w-full rounded-2xl bg-slate-200/70 dark:bg-zinc-800" />
+                  <Skeleton className="h-11 w-full rounded-2xl bg-slate-200/70 dark:bg-zinc-800" />
+                  <Skeleton className="h-11 w-full rounded-2xl bg-slate-200/70 dark:bg-zinc-800" />
                 </div>
               )}
             </div>

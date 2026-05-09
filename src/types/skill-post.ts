@@ -20,6 +20,8 @@ export interface ISkillPost {
   longDescription?: string;
   previewContent?: unknown;
   lockedContent?: unknown;
+  durationHours?: number;
+  level?: string;
   tokenPrice: number;
   images: string[];
   creatorId: string;

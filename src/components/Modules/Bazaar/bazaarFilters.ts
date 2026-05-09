@@ -1,5 +1,5 @@
-export const BAZAAR_DEFAULT_LIMIT = 8;
-export const BAZAAR_MAX_PRICE = 250;
+export const BAZAAR_DEFAULT_LIMIT = 12;
+export const BAZAAR_MAX_PRICE = 1000;
 
 export interface BazaarFilterState {
   searchTerm: string;
@@ -27,8 +27,10 @@ const normalizeCategoryList = (value: string | string[] | undefined): string[] =
 };
 
 const toNumber = (value: string | string[] | undefined, fallback: number): number => {
-  const parsed = Number(toStringValue(value));
+  const str = toStringValue(value);
+  if (!str) return fallback;
 
+  const parsed = Number(str);
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 

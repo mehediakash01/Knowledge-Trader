@@ -99,7 +99,7 @@ export function SkillCard({ post, accessState }: SkillCardProps) {
   return (
     <motion.article
       layout
-      whileHover={{ y: -6, scale: 1.01 }}
+      whileHover={{ y: -6, scale: 1.02 }}
       transition={{ type: "spring", stiffness: 320, damping: 24 }}
       className="group relative h-full"
     >
@@ -109,6 +109,7 @@ export function SkillCard({ post, accessState }: SkillCardProps) {
           <ThumbnailArt category={post.category} visual={visual} />
 
           <div className="absolute inset-0 bg-linear-to-t from-zinc-950/65 via-zinc-950/10 to-transparent" />
+          
           <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
             <span className="rounded-full border border-white/20 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md">
               {post.category}
@@ -129,6 +130,13 @@ export function SkillCard({ post, accessState }: SkillCardProps) {
                 Locked
               </span>
             )}
+          </div>
+
+          {/* Hover Affordance - View Vault Button */}
+          <div className="absolute inset-0 flex items-center justify-center bg-zinc-950/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 backdrop-blur-[2px]">
+            <div className="flex translate-y-4 items-center gap-2 rounded-full border border-blue-400/50 bg-blue-600/90 px-5 py-2.5 text-sm font-bold text-white shadow-[0_0_40px_-5px_rgba(37,99,235,0.8)] transition-transform duration-300 group-hover:translate-y-0">
+              Explore Skill <Sparkles className="size-4" />
+            </div>
           </div>
 
           <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4 text-white">
@@ -153,21 +161,31 @@ export function SkillCard({ post, accessState }: SkillCardProps) {
         </div>
 
         <div className="space-y-3 p-4">
+          <div className="flex items-center justify-between gap-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+            <span className="flex items-center gap-1"><BadgeCheck className="size-3.5 text-blue-500" /> Verified</span>
+            <div className="flex items-center gap-2">
+              <span>{post.durationHours ? `${post.durationHours}h` : "4h"} est.</span>
+              <span>•</span>
+              <span className="text-zinc-900 dark:text-zinc-200">{post.level || "Intermediate"}</span>
+            </div>
+          </div>
+
           <h3 className="line-clamp-2 text-lg font-semibold leading-snug tracking-tight text-zinc-950 dark:text-white">
             {post.title}
           </h3>
-          <p className="line-clamp-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+          <p className="line-clamp-2 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
             {post.shortDescription}
           </p>
 
           <div className="flex flex-wrap gap-2 pt-1">
             {post.tags.slice(0, 3).map((tag) => (
-              <span
+              <Link
                 key={tag}
-                className="rounded-full border border-blue-500/10 bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700 dark:border-cyan-300/10 dark:bg-cyan-300/10 dark:text-cyan-200"
+                href={`/bazaar?searchTerm=${encodeURIComponent(tag)}`}
+                className="relative z-20 rounded-full border border-blue-500/10 bg-blue-50 px-2.5 py-1 text-[11px] font-semibold text-blue-700 transition-colors hover:bg-blue-100 dark:border-cyan-300/10 dark:bg-cyan-300/10 dark:text-cyan-200 dark:hover:bg-cyan-300/20"
               >
                 {tag}
-              </span>
+              </Link>
             ))}
           </div>
         </div>
