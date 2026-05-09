@@ -8,22 +8,32 @@ import { getAccessToken } from "@/services/auth.service";
 
 interface ProtectedRouteProps {
   children: ReactNode;
+  allowedRoles?: string[];
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
+export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const accessToken = useAppSelector((state) => state.auth.accessToken);
+  const { accessToken, user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     if (!accessToken && !getAccessToken()) {
       router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
     }
-  }, [accessToken, pathname, router]);
+
+    if (allowedRoles && user?.role && !allowedRoles.includes(user.role)) {
+      router.replace("/dashboard");
+    }
+  }, [accessToken, pathname, router, allowedRoles, user?.role]);
 
   if (!accessToken && !getAccessToken()) {
     return null;
   }
 
-  return children;
+  if (allowedRoles && (!user?.role || !allowedRoles.includes(user.role))) {
+    return null;
+  }
+
+  return <>{children}</>;
 }

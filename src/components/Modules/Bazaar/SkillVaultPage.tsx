@@ -10,6 +10,7 @@ import { useGetMyTradesQuery } from "@/redux/api/tradeApi";
 import { useAppSelector } from "@/redux/hooks";
 import { getCategoryVisual } from "./SkillCard";
 import { PurchaseModal } from "./PurchaseModal";
+import { AIInsights } from "./AIInsights";
 import { Button } from "@/components/UI/button";
 import { Skeleton } from "@/components/UI/skeleton";
 import { cn } from "@/lib/utils";
@@ -137,6 +138,11 @@ export function SkillVaultPage({ id }: { id: string }) {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* AI Insights Section */}
+        <div className="mt-8">
+          <AIInsights postId={post.id} />
         </div>
 
         {/* Content Vault Section */}
