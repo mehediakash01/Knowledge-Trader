@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Knowledge Trader",
-  description: "A reputation-backed skill marketplace with immersive discovery and trades.",
+  title: "Knowledge Trader - Skill Exchange Marketplace",
+  description: "A reputation-backed skill marketplace with AI-driven discovery, real-time notifications, and tokenized knowledge exchange.",
 };
 
 export default function RootLayout({
