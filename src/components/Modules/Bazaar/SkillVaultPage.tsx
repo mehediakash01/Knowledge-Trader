@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, LockKeyhole, ShieldCheck, Sparkles, UserRound, CheckCircle2 } from "lucide-react";
 
+import Link from "next/link";
 import { useGetSkillPostByIdQuery } from "@/redux/api/skillPostApi";
 import { useGetMyTradesQuery } from "@/redux/api/tradeApi";
 import { useAppSelector } from "@/redux/hooks";
@@ -67,16 +68,18 @@ export function SkillVaultPage({ id }: { id: string }) {
       />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumbs & Back */}
-        <button 
-          onClick={() => router.back()} 
-          className="group flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
-        >
-          <div className="flex size-8 items-center justify-center rounded-full border border-zinc-200 bg-white shadow-sm transition-transform group-hover:-translate-x-1 dark:border-white/10 dark:bg-zinc-900">
-            <ChevronLeft className="size-4" />
-          </div>
-          Back to Bazaar
-        </button>
+        {/* Breadcrumbs */}
+        <nav className="flex items-center space-x-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+          <Link href="/" className="transition-colors hover:text-zinc-900 dark:hover:text-white">
+            Home
+          </Link>
+          <span className="select-none">/</span>
+          <Link href="/bazaar" className="transition-colors hover:text-zinc-900 dark:hover:text-white">
+            Bazaar
+          </Link>
+          <span className="select-none">/</span>
+          <span className="text-zinc-900 dark:text-white">{post.category}</span>
+        </nav>
 
         {/* Hero Section */}
         <div className="mt-8 flex flex-col gap-8 md:flex-row md:items-start md:justify-between">

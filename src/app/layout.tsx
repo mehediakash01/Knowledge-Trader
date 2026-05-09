@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/lib/Providers";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,6 +31,17 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-slate-50 text-zinc-950 dark:bg-zinc-950 dark:text-slate-50">
+        <NextTopLoader color="#0ea5e9" showSpinner={false} />
+        {/* Subtle Noise Overlay */}
+        <div className="pointer-events-none fixed inset-0 z-[999] opacity-[0.03] mix-blend-overlay dark:opacity-[0.02]">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+            <filter id="noiseFilter">
+              <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+          </svg>
+        </div>
+        
         <Providers>{children}</Providers>
       </body>
     </html>

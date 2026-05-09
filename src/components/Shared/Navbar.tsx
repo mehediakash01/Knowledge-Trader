@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { BookOpenText, ChevronDown, Menu, UserRound } from "lucide-react";
 import { toast } from "sonner";
 
@@ -19,12 +19,13 @@ import { ThemeToggle } from "@/components/Shared/ThemeToggle";
 import { NotificationBell } from "@/components/Shared/NotificationBell";
 import { logout } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/bazaar", label: "Bazaar" },
-  { href: "#skills", label: "Explore" },
-  { href: "#trades", label: "Trades" },
-  { href: "#reviews", label: "Reviews" },
+  { href: "/how-it-works", label: "How it Works" },
+  { href: "/leaderboard", label: "Leaderboard" },
+  { href: "/support", label: "Support" },
 ];
 
 const getInitials = (name?: string, email?: string) => {
@@ -40,6 +41,7 @@ const getInitials = (name?: string, email?: string) => {
 export function Navbar() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const pathname = usePathname();
   const user = useAppSelector((state) => state.auth.user);
   const ktBalance = user?.ktBalance ?? 0;
 
@@ -61,16 +63,25 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-7 md:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-zinc-600 transition-colors hover:text-blue-600 dark:text-zinc-300 dark:hover:text-cyan-300"
-            >
-              {item.label}
-            </Link>
-          ))}
+        <div className="hidden items-center gap-2 md:flex">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "relative px-4 py-2 text-sm font-medium transition-colors hover:text-blue-600 dark:hover:text-cyan-300",
+                  isActive ? "text-blue-600 dark:text-cyan-300" : "text-zinc-600 dark:text-zinc-300"
+                )}
+              >
+                {item.label}
+                {isActive && (
+                  <span className="absolute inset-x-4 -bottom-[19px] h-0.5 bg-blue-600 shadow-[0_-2px_10px_rgba(37,99,235,0.8)] dark:bg-cyan-400 dark:shadow-[0_-2px_10px_rgba(34,211,238,0.8)]" />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="flex items-center gap-2">

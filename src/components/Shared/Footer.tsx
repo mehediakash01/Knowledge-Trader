@@ -3,15 +3,25 @@ import Link from "next/link";
 const footerColumns = [
   {
     title: "Marketplace",
-    links: ["Explore Skills", "Teacher Profiles", "Trade Requests"],
+    links: [
+      { name: "Explore Bazaar", href: "/bazaar" },
+      { name: "Leaderboard", href: "/leaderboard" },
+      { name: "How it Works", href: "/how-it-works" },
+    ],
   },
   {
-    title: "Resources",
-    links: ["Guides", "Trust Center", "API"],
+    title: "Support",
+    links: [
+      { name: "Trust Center", href: "/support" },
+      { name: "Contact", href: "/support" },
+    ],
   },
   {
-    title: "Company",
-    links: ["About", "Careers", "Contact"],
+    title: "Legal",
+    links: [
+      { name: "Privacy Policy", href: "/privacy" },
+      { name: "Terms of Service", href: "/terms" },
+    ],
   },
 ];
 
@@ -35,12 +45,12 @@ export function Footer() {
             </h2>
             <ul className="mt-3 space-y-2">
               {column.links.map((link) => (
-                <li key={link}>
+                <li key={link.name}>
                   <Link
-                    href="#"
+                    href={link.href}
                     className="text-sm text-zinc-600 transition-colors hover:text-blue-600 dark:text-zinc-400 dark:hover:text-cyan-300"
                   >
-                    {link}
+                    {link.name}
                   </Link>
                 </li>
               ))}
