@@ -3,6 +3,7 @@ import config from "../config";
 import logger from "./logger";
 
 let redisClient: RedisClientType | null = null;
+let connectPromise: Promise<void> | null = null;
 const memoryCache = new Map<string, { value: string; expiresAt: number }>();
 
 const getRedisClient = async () => {
@@ -12,17 +13,29 @@ const getRedisClient = async () => {
 
   if (!redisClient) {
     redisClient = createClient({ url: config.redis.url });
+    
     redisClient.on("error", (error) => {
-      logger.error({ message: "Redis cache error", error });
-      redisClient = null;
+      // We don't set redisClient = null here so node-redis can auto-reconnect,
+      // and we avoid leaking multiple clients that loop connections in the background.
+      logger.error({ 
+        message: "Redis cache error", 
+        error: error instanceof Error ? error.message : String(error)
+      });
+    });
+
+    connectPromise = redisClient.connect().catch((err) => {
+      logger.error({ 
+        message: "Redis initial connect error", 
+        error: err instanceof Error ? err.message : String(err) 
+      });
     });
   }
 
-  if (!redisClient.isOpen) {
-    await redisClient.connect();
+  if (connectPromise && !redisClient.isReady) {
+    await connectPromise;
   }
 
-  return redisClient;
+  return redisClient.isReady ? redisClient : null;
 };
 
 const get = async <T>(key: string): Promise<T | null> => {

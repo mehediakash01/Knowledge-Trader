@@ -77,12 +77,28 @@ const getAllSkillPosts = async (
   }
 
   if (category) {
-    andConditions.push({
-      category: {
-        equals: category,
-        mode: "insensitive",
-      },
-    });
+    const categories = category
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    if (categories.length === 1) {
+      andConditions.push({
+        category: {
+          equals: categories[0],
+          mode: "insensitive",
+        },
+      });
+    } else if (categories.length > 1) {
+      andConditions.push({
+        OR: categories.map((item) => ({
+          category: {
+            equals: item,
+            mode: "insensitive",
+          },
+        })),
+      });
+    }
   }
 
   if (minPrice || maxPrice) {
@@ -115,6 +131,11 @@ const getAllSkillPosts = async (
             reputationScore: true,
           },
         },
+        _count: {
+          select: {
+            reviews: true,
+          },
+        },
       },
     }),
     prisma.skillPost.count({
@@ -145,6 +166,11 @@ const getSingleSkillPost = async (id: string, userId?: string) => {
           email: true,
           reputationScore: true,
           expertise: true,
+        },
+      },
+      _count: {
+        select: {
+          reviews: true,
         },
       },
     },
