@@ -128,3 +128,31 @@
     @apply font-sans;
   }
 }
+
+/* Custom Scrollbar - Sapphire Blue Theme */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.546 0.245 262.881 / 0.5); /* Sapphire blue, 50% opacity */
+  border-radius: 10px;
+  border: 2px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.546 0.245 262.881 / 0.8);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(0.746 0.16 232.661 / 0.5); /* Dark mode accent */
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.746 0.16 232.661 / 0.8);
+}
