@@ -7,6 +7,7 @@ import { LayoutDashboard, BookOpen, PenTool, BarChart3, Users, Settings, Sparkle
 
 import { useAppSelector } from "@/redux/hooks";
 import { ProtectedRoute } from "@/components/Shared/ProtectedRoute";
+import { ErrorBoundary } from "@/components/Shared/ErrorBoundary";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -66,7 +67,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </aside>
         <main className="flex-1 overflow-y-auto p-6 lg:p-10">
-          {children}
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
         </main>
       </div>
     </ProtectedRoute>

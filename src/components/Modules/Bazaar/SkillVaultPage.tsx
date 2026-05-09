@@ -11,6 +11,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { getCategoryVisual } from "./SkillCard";
 import { PurchaseModal } from "./PurchaseModal";
 import { AIInsights } from "./AIInsights";
+import { ReviewSection } from "./ReviewSection";
 import { Button } from "@/components/UI/button";
 import { Skeleton } from "@/components/UI/skeleton";
 import { cn } from "@/lib/utils";
@@ -215,6 +216,11 @@ export function SkillVaultPage({ id }: { id: string }) {
             )}
           </AnimatePresence>
         </div>
+      </div>
+
+      {/* Review Section — only visible to purchasers */}
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <ReviewSection postId={post.id} hasAccess={hasAccess} />
       </div>
 
       <PurchaseModal 

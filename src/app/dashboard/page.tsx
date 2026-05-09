@@ -4,6 +4,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { useGetMyTradesQuery } from "@/redux/api/tradeApi";
 import { Card } from "@/components/UI/card";
 import { Wallet, Sparkles, ShoppingBag, ArrowRight, BookOpen } from "lucide-react";
+import type { IMyTrade } from "@/types";
 import Link from "next/link";
 import { motion } from "framer-motion";
 

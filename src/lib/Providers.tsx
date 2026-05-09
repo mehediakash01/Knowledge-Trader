@@ -8,6 +8,7 @@ import { setCredentials } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { store } from "@/redux/store";
 import { Toaster } from "@/components/UI/sonner";
+import { SocketProvider } from "@/context/SocketContext";
 import {
   getAccessToken,
   getAuthUser,
@@ -29,7 +30,9 @@ export function Providers({ children }: ProvidersProps) {
         disableTransitionOnChange
       >
         <AuthStateHydrator />
-        {children}
+        <SocketProvider>
+          {children}
+        </SocketProvider>
         <Toaster richColors position="top-right" />
       </ThemeProvider>
     </Provider>

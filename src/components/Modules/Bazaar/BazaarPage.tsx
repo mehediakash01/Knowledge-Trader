@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -50,6 +50,7 @@ const PAGE_ANIMATION = {
 const ITEM_ANIMATION = {
   hidden: { opacity: 0, y: 18 },
   visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
 };
 
 function filterStateFromQuery(searchParams: ReturnType<typeof useSearchParams>) {
@@ -348,21 +349,23 @@ export function BazaarPage() {
               </motion.div>
             ) : skillPostQuery.data?.data.length ? (
               <>
-                <motion.div
-                  variants={PAGE_ANIMATION}
-                  initial="hidden"
-                  animate="visible"
-                  className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
-                >
-                  {skillPostQuery.data.data.map((post) => (
-                    <motion.div key={post.id} variants={ITEM_ANIMATION}>
-                      <SkillCard
-                        post={post}
-                        accessState={accessStateForPost(post.id, post.creatorId)}
-                      />
-                    </motion.div>
-                  ))}
-                </motion.div>
+                <AnimatePresence mode="popLayout">
+                  <motion.div
+                    variants={PAGE_ANIMATION}
+                    initial="hidden"
+                    animate="visible"
+                    className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+                  >
+                    {skillPostQuery.data.data.map((post) => (
+                      <motion.div key={post.id} variants={ITEM_ANIMATION}>
+                        <SkillCard
+                          post={post}
+                          accessState={accessStateForPost(post.id, post.creatorId)}
+                        />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </AnimatePresence>
 
                 <BazaarPagination
                   page={skillPostQuery.data.meta.page}

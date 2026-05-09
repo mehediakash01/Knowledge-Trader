@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/UI/dropdown-menu";
 import { ThemeToggle } from "@/components/Shared/ThemeToggle";
+import { NotificationBell } from "@/components/Shared/NotificationBell";
 import { logout } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
@@ -74,6 +75,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <ThemeToggle />
+          <NotificationBell />
 
           {user ? (
             <div className="hidden items-center gap-2 sm:flex">
