@@ -1,4 +1,5 @@
 import { baseApi } from "@/redux/api/baseApi";
+import { setCredentials } from "@/redux/features/auth/authSlice";
 import type { IApiResponse, IUser } from "@/types";
 
 export interface ILoginRequest {
@@ -68,7 +69,25 @@ export const authApi = baseApi.injectEndpoints({
         normalizeUser(response.data),
       invalidatesTags: ["user"],
     }),
+    getMe: builder.query<IUser, void>({
+      query: () => ({
+        url: "/auth/me",
+        method: "GET",
+      }),
+      transformResponse: (response: IApiResponse<IBackendUser>) =>
+        normalizeUser(response.data),
+      providesTags: ["user"],
+      async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setCredentials({ user: data }));
+        } catch (err) {
+          // If fetch fails, we don't necessarily want to logout here
+          // as it might be a temporary network issue.
+        }
+      },
+    }),
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation, useGetMeQuery } = authApi;

@@ -3,11 +3,19 @@
 import { Moon, Sun } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/UI/button";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch by only rendering after client hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const isDark = resolvedTheme === "dark";
 
   return (
@@ -24,11 +32,11 @@ export function ThemeToggle() {
         className="absolute inset-0 flex items-center justify-center"
         transition={{ type: "spring", stiffness: 420, damping: 32 }}
       >
-        {isDark ? (
+        {mounted && (isDark ? (
           <Moon className="size-4 text-cyan-300" />
         ) : (
           <Sun className="size-4 text-blue-600" />
-        )}
+        ))}
       </motion.span>
     </Button>
   );

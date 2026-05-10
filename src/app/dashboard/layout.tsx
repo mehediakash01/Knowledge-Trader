@@ -3,7 +3,16 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, PenTool, BarChart3, Users, Settings, Sparkles } from "lucide-react";
+import { 
+  LayoutDashboard, 
+  BookOpen, 
+  PenTool, 
+  BarChart3, 
+  Users, 
+  Settings, 
+  Sparkles,
+  ArrowLeftRight 
+} from "lucide-react";
 
 import { useAppSelector } from "@/redux/hooks";
 import { ProtectedRoute } from "@/components/Shared/ProtectedRoute";
@@ -20,6 +29,7 @@ interface NavItem {
 const userNavItems: NavItem[] = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/assets", label: "My Assets", icon: BookOpen },
+  { href: "/dashboard/trades", label: "My Trades", icon: ArrowLeftRight },
   { href: "/dashboard/matchmaker", label: "AI Matchmaker", icon: Sparkles, isHighlight: true },
 ];
 

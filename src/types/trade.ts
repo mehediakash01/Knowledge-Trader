@@ -20,7 +20,23 @@ export interface IMyTrade {
   teacher?: ITradeUserSummary;
 }
 
+export interface IBarterRequest {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  skillOfferedId: string;
+  skillRequestedId: string;
+  status: "PENDING" | "ACCEPTED" | "REJECTED";
+  skillOffered: ITradePostSummary;
+  skillRequested: ITradePostSummary;
+  sender?: ITradeUserSummary;
+  receiver?: ITradeUserSummary;
+  createdAt: string;
+}
+
 export interface IMyTradesResponse {
   learningTrades: IMyTrade[];
   teachingTrades: IMyTrade[];
+  sentBarters: IBarterRequest[];
+  receivedBarters: IBarterRequest[];
 }

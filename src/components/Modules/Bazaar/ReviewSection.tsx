@@ -12,9 +12,10 @@ import { cn } from "@/lib/utils";
 interface ReviewSectionProps {
   postId: string;
   hasAccess: boolean;
+  hasReviewed?: boolean;
 }
 
-export function ReviewSection({ postId, hasAccess }: ReviewSectionProps) {
+export function ReviewSection({ postId, hasAccess, hasReviewed }: ReviewSectionProps) {
   const [rating, setRating] = useState(0);
   const [hovered, setHovered] = useState(0);
   const [comment, setComment] = useState("");
@@ -35,15 +36,17 @@ export function ReviewSection({ postId, hasAccess }: ReviewSectionProps) {
     }
   };
 
+  const isAlreadyReviewed = submitted || hasReviewed;
+
   return (
     <div className="mt-12">
       <h2 className="mb-6 text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
-        Leave a Review
+        {isAlreadyReviewed ? "Your Review" : "Leave a Review"}
       </h2>
 
       <div className="overflow-hidden rounded-[2rem] border border-white/60 bg-white/70 p-6 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-zinc-900/60">
         <AnimatePresence mode="wait">
-          {submitted ? (
+          {isAlreadyReviewed ? (
             <motion.div
               key="success"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -55,7 +58,7 @@ export function ReviewSection({ postId, hasAccess }: ReviewSectionProps) {
               </div>
               <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Review Submitted!</h3>
               <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-                Your review helps others in the community. Thank you!
+                {hasReviewed ? "You have already reviewed this skill. Thank you for your feedback!" : "Your review helps others in the community. Thank you!"}
               </p>
             </motion.div>
           ) : (

@@ -27,6 +27,9 @@ export interface ISkillPost {
   creatorId: string;
   creator: ISkillPostCreator;
   _count?: ISkillPostCount;
+  hasReviewed?: boolean;
+  isAccessible?: boolean;
+  isOwned?: boolean;
 }
 
 export interface ISkillPostPaginationMeta {

@@ -17,6 +17,7 @@ import {
 } from "@/components/UI/dropdown-menu";
 import { ThemeToggle } from "@/components/Shared/ThemeToggle";
 import { NotificationBell } from "@/components/Shared/NotificationBell";
+import { useGetMeQuery } from "@/redux/api/authApi";
 import { logout } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { cn } from "@/lib/utils";
@@ -43,6 +44,10 @@ export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const user = useAppSelector((state) => state.auth.user);
+  
+  // Keep user data in sync (token balance, etc.)
+  useGetMeQuery(undefined, { skip: !user });
+
   const ktBalance = user?.ktBalance ?? 0;
 
   const handleLogout = () => {

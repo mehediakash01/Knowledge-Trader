@@ -24,7 +24,31 @@ export const tradeApi = baseApi.injectEndpoints({
         response.data,
       providesTags: [{ type: "trade", id: "MY_TRADES" }],
     }),
+    createBarterRequest: builder.mutation<void, any>({
+      query: (payload) => ({
+        url: "/trades/barter-request",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["trade", "skillPost"],
+    }),
+    updateBarterStatus: builder.mutation<
+      void,
+      { barterId: string; status: "ACCEPTED" | "REJECTED" }
+    >({
+      query: ({ barterId, ...payload }) => ({
+        url: `/trades/barter-request/${barterId}`,
+        method: "PATCH",
+        body: payload,
+      }),
+      invalidatesTags: ["trade", "skillPost", "user"],
+    }),
   }),
 });
 
-export const { useGetMyTradesQuery, useExecuteTokenTradeMutation } = tradeApi;
+export const {
+  useGetMyTradesQuery,
+  useExecuteTokenTradeMutation,
+  useCreateBarterRequestMutation,
+  useUpdateBarterStatusMutation,
+} = tradeApi;

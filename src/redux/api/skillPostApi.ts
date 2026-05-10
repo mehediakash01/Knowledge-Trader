@@ -13,6 +13,7 @@ export interface IGetSkillPostsParams {
   maxPrice?: number | string;
   page?: number | string;
   limit?: number | string;
+  creatorId?: string;
 }
 
 interface IGetSkillPostsPayload {
