@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles, ThumbsUp, ThumbsDown, BrainCircuit } from "lucide-react";
+import { Sparkles, ThumbsUp, ThumbsDown, BrainCircuit, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { useSummarizeReviewsMutation } from "@/redux/api/aiApi";
 import { Button } from "@/components/UI/button";
+import { AIActionInfo } from "@/components/Shared/AIActionInfo";
 
 interface AIInsightsProps {
   postId: string;
@@ -14,6 +15,7 @@ interface AIInsightsProps {
 export function AIInsights({ postId }: AIInsightsProps) {
   const [summarizeReviews, { data, isLoading, isError, isSuccess }] = useSummarizeReviewsMutation();
   const [pulseText, setPulseText] = useState("Analyzing Market Trends...");
+  const [isModelBusy, setIsModelBusy] = useState(false);
 
   useEffect(() => {
     if (isLoading) {
@@ -27,6 +29,19 @@ export function AIInsights({ postId }: AIInsightsProps) {
     }
   }, [isLoading]);
 
+  useEffect(() => {
+    if (!isLoading) {
+      setIsModelBusy(false);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setIsModelBusy(true);
+    }, 30000);
+
+    return () => clearTimeout(timer);
+  }, [isLoading]);
+
   if (!data && !isLoading && !isSuccess) {
     return (
       <div className="rounded-[2rem] border border-blue-500/20 bg-linear-to-br from-blue-500/5 to-cyan-400/5 p-6 dark:border-cyan-400/20 dark:from-blue-900/10 dark:to-cyan-900/10">
@@ -38,14 +53,38 @@ export function AIInsights({ postId }: AIInsightsProps) {
           <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 max-w-md">
             Our AI can read all reviews and generate a concise pros/cons summary to help you decide.
           </p>
-          <Button 
-            onClick={() => summarizeReviews(postId)}
-            className="mt-4 rounded-full bg-blue-600 text-white shadow-md shadow-blue-600/20 hover:bg-blue-700 dark:bg-cyan-500 dark:text-zinc-950 dark:hover:bg-cyan-400"
-          >
-            <Sparkles className="mr-2 size-4" />
-            Generate Insights
-          </Button>
-          {isError && <p className="mt-2 text-sm text-red-500">Failed to generate insights. Please try again.</p>}
+          <div className="mt-4 flex items-center gap-2">
+            <Button 
+              onClick={() => summarizeReviews(postId)}
+              className="rounded-full bg-blue-600 text-white shadow-md shadow-blue-600/20 hover:bg-blue-700 dark:bg-cyan-500 dark:text-zinc-950 dark:hover:bg-cyan-400"
+            >
+              <Sparkles className="mr-2 size-4" />
+              Generate Insights
+            </Button>
+            <AIActionInfo
+              title="Smart Reviewer"
+              description="Reads marketplace reviews and summarizes the strongest pros, cons, and key purchase insights."
+            />
+          </div>
+          {isError && (
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <p className="text-xs font-medium text-red-500">Failed to generate insights. Please try again.</p>
+              <Button variant="outline" size="sm" onClick={() => summarizeReviews(postId)} className="rounded-full">
+                Try Again
+              </Button>
+            </div>
+          )}
+          {isModelBusy && (
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <p className="flex items-center gap-1.5 text-xs font-medium text-amber-600 dark:text-amber-300">
+                <AlertCircle className="size-3.5" />
+                Model Busy. Review summary timed out after 30 seconds.
+              </p>
+              <Button variant="outline" size="sm" onClick={() => summarizeReviews(postId)} className="rounded-full">
+                Try Again
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     );
