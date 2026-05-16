@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
@@ -11,7 +11,8 @@ import {
   Users, 
   Settings, 
   Sparkles,
-  ArrowLeftRight 
+  ArrowLeftRight,
+  BarChart2
 } from "lucide-react";
 
 import { useAppSelector } from "@/redux/hooks";
@@ -31,6 +32,8 @@ const userNavItems: NavItem[] = [
   { href: "/dashboard/assets", label: "My Assets", icon: BookOpen },
   { href: "/dashboard/trades", label: "My Trades", icon: ArrowLeftRight },
   { href: "/dashboard/matchmaker", label: "AI Matchmaker", icon: Sparkles, isHighlight: true },
+  { href: "/dashboard/analytics", label: "AI Analytics", icon: BarChart2, isHighlight: true },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 const adminNavItems: NavItem[] = [
@@ -38,9 +41,22 @@ const adminNavItems: NavItem[] = [
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const user = useAppSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
+  if (!mounted) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-slate-50 dark:bg-zinc-950">
+        <div className="size-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent dark:border-cyan-400" />
+      </div>
+    );
+  }
+
   const isAdmin = user?.role === "ADMIN" || user?.role === "admin";
   const navItems = isAdmin ? [...adminNavItems, ...userNavItems] : userNavItems;
 
