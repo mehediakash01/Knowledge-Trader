@@ -175,7 +175,6 @@ export default function MyTradesPage() {
             <div className="grid gap-3">
               {allHistory.map((item: any) => {
                 const isBarter = !!item.skillOffered;
-                const isLearning = item.learnerId === trades?.learningTrades?.[0]?.learnerId || item.senderId === trades?.learningTrades?.[0]?.learnerId;
                 
                 return (
                   <div key={item.id} className="flex items-center justify-between rounded-2xl bg-white p-4 ring-1 ring-zinc-200 dark:bg-zinc-900 dark:ring-zinc-800">
