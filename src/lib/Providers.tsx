@@ -2,6 +2,7 @@
 
 import { useEffect, type ReactNode } from "react";
 import { ThemeProvider } from "next-themes";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider } from "react-redux";
 
 import { setCredentials } from "@/redux/features/auth/authSlice";
@@ -20,6 +21,8 @@ interface ProvidersProps {
   children: ReactNode;
 }
 
+const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+
 export function Providers({ children }: ProvidersProps) {
   return (
     <Provider store={store}>
@@ -29,11 +32,11 @@ export function Providers({ children }: ProvidersProps) {
         enableSystem
         disableTransitionOnChange
       >
-        <AuthStateHydrator />
-        <SocketProvider>
-          {children}
-        </SocketProvider>
-        <Toaster richColors position="top-right" />
+        <GoogleOAuthProvider clientId={googleClientId || ""}>
+          <AuthStateHydrator />
+          <SocketProvider>{children}</SocketProvider>
+          <Toaster richColors position="top-right" />
+        </GoogleOAuthProvider>
       </ThemeProvider>
     </Provider>
   );

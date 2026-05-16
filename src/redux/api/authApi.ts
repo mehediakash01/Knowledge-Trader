@@ -7,6 +7,10 @@ export interface ILoginRequest {
   password: string;
 }
 
+export interface IGoogleLoginRequest {
+  token: string;
+}
+
 export interface IRegisterRequest {
   name: string;
   email: string;
@@ -19,8 +23,16 @@ interface IBackendUser {
   email?: string;
   role?: string;
   image?: string;
+  bio?: string | null;
+  tagline?: string | null;
   tokenBalance?: number;
   ktBalance?: number;
+  reputationScore?: number;
+  interests?: string[];
+  expertise?: Array<{ name: string; level: "Beginner" | "Intermediate" | "Expert" }> | null;
+  learningPath?: Array<{ name: string; priority: number }> | null;
+  socialLinks?: Array<{ platform: string; url: string }> | null;
+  experience?: Array<{ title: string; company: string; duration: string }> | null;
 }
 
 export interface IAuthResponse {
@@ -35,7 +47,14 @@ const normalizeUser = (user: IBackendUser): IUser => ({
   email: user.email,
   role: user.role,
   image: user.image,
+  bio: user.bio,
+  tagline: user.tagline,
+  reputationScore: user.reputationScore,
   ktBalance: user.ktBalance ?? user.tokenBalance ?? 0,
+  expertise: user.expertise ?? [],
+  learningPath: user.learningPath ?? [],
+  socialLinks: user.socialLinks ?? [],
+  experience: user.experience ?? [],
 });
 
 export const authApi = baseApi.injectEndpoints({
@@ -57,7 +76,26 @@ export const authApi = baseApi.injectEndpoints({
         refreshToken: response.data.refreshToken,
         user: normalizeUser(response.data.user),
       }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ["User"],
+    }),
+    googleLogin: builder.mutation<IAuthResponse, IGoogleLoginRequest>({
+      query: (payload) => ({
+        url: "/auth/google-login",
+        method: "POST",
+        body: payload,
+      }),
+      transformResponse: (
+        response: IApiResponse<{
+          accessToken: string;
+          refreshToken: string;
+          user: IBackendUser;
+        }>
+      ) => ({
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
+        user: normalizeUser(response.data.user),
+      }),
+      invalidatesTags: ["User"],
     }),
     register: builder.mutation<IUser, IRegisterRequest>({
       query: (payload) => ({
@@ -67,7 +105,7 @@ export const authApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: IApiResponse<IBackendUser>) =>
         normalizeUser(response.data),
-      invalidatesTags: ["user"],
+      invalidatesTags: ["User"],
     }),
     getMe: builder.query<IUser, void>({
       query: () => ({
@@ -76,7 +114,7 @@ export const authApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: IApiResponse<IBackendUser>) =>
         normalizeUser(response.data),
-      providesTags: ["user"],
+      providesTags: ["User"],
       async onQueryStarted(_args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
@@ -90,4 +128,9 @@ export const authApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useGetMeQuery } = authApi;
+export const {
+  useLoginMutation,
+  useGoogleLoginMutation,
+  useRegisterMutation,
+  useGetMeQuery,
+} = authApi;

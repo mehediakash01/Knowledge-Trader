@@ -26,7 +26,8 @@ import {
   FormMessage,
 } from "@/components/UI/form";
 import { Input } from "@/components/UI/input";
-import { useLoginMutation } from "@/redux/api/authApi";
+import { GoogleAuthButton } from "@/components/Modules/Auth/GoogleAuthButton";
+import { useGoogleLoginMutation, useLoginMutation } from "@/redux/api/authApi";
 import { setCredentials } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { getApiErrorMessage } from "@/utils/error";
@@ -45,6 +46,7 @@ interface LoginFormProps {
 export function LoginForm({ redirectTo = "/" }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [login, { isLoading }] = useLoginMutation();
+  const [googleLogin] = useGoogleLoginMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -77,28 +79,66 @@ export function LoginForm({ redirectTo = "/" }: LoginFormProps) {
     }
   };
 
+  const handleGoogleToken = async (token: string) => {
+    try {
+      const result = await googleLogin({ token }).unwrap();
+
+      dispatch(
+        setCredentials({
+          user: result.user,
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        })
+      );
+
+      toast.success("Logged in with Google");
+      router.push(redirectTo);
+    } catch (error) {
+      const message = getApiErrorMessage(error);
+      form.setError("root", { message });
+      toast.error(message);
+      throw error;
+    }
+  };
+
   return (
-    <Card className="w-full max-w-md border-zinc-200 bg-white/85 shadow-2xl shadow-blue-950/10 backdrop-blur-xl dark:border-white/10 dark:bg-zinc-900/80">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Welcome back</CardTitle>
-        <CardDescription>
-          Sign in to manage trades, tokens, and learning offers.
+    <Card className="w-full border-2 border-zinc-800 bg-zinc-950/92 text-zinc-50 shadow-[0_30px_90px_-40px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+      <CardHeader className="space-y-3 border-b border-white/6 px-6 pb-6 pt-6 sm:px-8">
+        <div className="inline-flex w-fit items-center rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-emerald-300">
+          Secure sign-in
+        </div>
+        <CardTitle className="text-3xl text-white">Welcome back</CardTitle>
+        <CardDescription className="max-w-md text-zinc-400">
+          Sign in to manage trades, tokens, and your live learning dashboard.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-6 pb-6 pt-6 sm:px-8">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <GoogleAuthButton
+              label="Continue with Google"
+              loadingLabel="Connecting with Google"
+              onToken={handleGoogleToken}
+            />
+
+            <div className="flex items-center gap-4 text-xs uppercase tracking-[0.28em] text-zinc-500">
+              <span className="h-px flex-1 bg-white/10" />
+              <span>or continue with email</span>
+              <span className="h-px flex-1 bg-white/10" />
+            </div>
+
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel className="text-zinc-300">Email</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
                       placeholder="you@example.com"
                       autoComplete="email"
+                      className="h-12 rounded-xl border-2 border-zinc-800 bg-zinc-900/80 px-4 text-zinc-50 placeholder:text-zinc-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] focus-visible:border-zinc-500 focus-visible:ring-4 focus-visible:ring-cyan-400/10"
                       {...field}
                     />
                   </FormControl>
@@ -112,21 +152,21 @@ export function LoginForm({ redirectTo = "/" }: LoginFormProps) {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-zinc-300">Password</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
                         placeholder="Enter your password"
                         autoComplete="current-password"
-                        className="pr-10"
+                        className="h-12 rounded-xl border-2 border-zinc-800 bg-zinc-900/80 px-4 pr-12 text-zinc-50 placeholder:text-zinc-500 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] focus-visible:border-zinc-500 focus-visible:ring-4 focus-visible:ring-cyan-400/10"
                         {...field}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon-sm"
-                        className="absolute right-1 top-1/2 -translate-y-1/2"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 border border-zinc-700 bg-zinc-950/80 text-zinc-300 hover:bg-zinc-800 hover:text-zinc-50"
                         onClick={() => setShowPassword((current) => !current)}
                         aria-label={
                           showPassword ? "Hide password" : "Show password"
@@ -146,7 +186,7 @@ export function LoginForm({ redirectTo = "/" }: LoginFormProps) {
             />
 
             {form.formState.errors.root?.message ? (
-              <p className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              <p className="rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-red-200">
                 {form.formState.errors.root.message}
               </p>
             ) : null}
@@ -154,7 +194,7 @@ export function LoginForm({ redirectTo = "/" }: LoginFormProps) {
             <Button
               type="submit"
               disabled={isLoading}
-              className="h-10 w-full bg-blue-600 text-white hover:bg-blue-700 dark:bg-cyan-400 dark:text-zinc-950 dark:hover:bg-cyan-300"
+              className="h-12 w-full rounded-xl border-2 border-cyan-300/20 bg-cyan-300 text-zinc-950 shadow-[0_12px_30px_-18px_rgba(34,211,238,0.8)] hover:bg-cyan-200 disabled:opacity-60"
             >
               {isLoading ? (
                 <>
@@ -168,11 +208,11 @@ export function LoginForm({ redirectTo = "/" }: LoginFormProps) {
           </form>
         </Form>
 
-        <p className="mt-6 text-center text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="mt-6 text-center text-sm text-zinc-400">
           New to Knowledge Trader?{" "}
           <Link
             href="/register"
-            className="font-medium text-blue-600 hover:underline dark:text-cyan-300"
+              className="font-medium text-cyan-300 underline-offset-4 hover:underline"
           >
             Create an account
           </Link>

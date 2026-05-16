@@ -188,6 +188,7 @@ cp .env.example .env.local
 # Edit .env.local with:
 # - NEXT_PUBLIC_API_URL: Backend URL (default: http://localhost:5000)
 # - NEXT_PUBLIC_SOCKET_URL: Socket server URL (default: http://localhost:5001)
+# - NEXT_PUBLIC_GOOGLE_CLIENT_ID: Google OAuth client ID used by the auth screens
 ```
 
 ### Step 3: Database Setup
