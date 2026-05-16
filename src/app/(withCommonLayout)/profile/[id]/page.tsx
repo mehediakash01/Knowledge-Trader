@@ -53,9 +53,16 @@ function ProfilePage() {
               </div>
 
               <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
-                {profile.expertise.map((skill) => (
-                  <Badge key={skill} variant="secondary" className="rounded-full bg-white px-4 py-1.5 dark:bg-zinc-800">
-                    {skill}
+                {(profile.expertise ?? []).map((skill) => (
+                  <Badge
+                    key={skill.name}
+                    variant="secondary"
+                    className="rounded-full bg-white px-4 py-1.5 dark:bg-zinc-800"
+                  >
+                    {skill.name}
+                    <span className="ml-2 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:bg-zinc-700 dark:text-zinc-200">
+                      {skill.level}
+                    </span>
                   </Badge>
                 ))}
               </div>
@@ -89,7 +96,7 @@ function ProfilePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <SkillCard post={post} />
+                <SkillCard post={post} accessState="locked" />
               </motion.div>
             ))}
           </div>
