@@ -30,7 +30,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-50 text-zinc-950 dark:bg-zinc-950 dark:text-slate-50">
+      <body className="min-h-full flex flex-col bg-slate-50 text-zinc-950 dark:bg-zinc-950 dark:text-slate-50" suppressHydrationWarning>
         <NextTopLoader color="#0ea5e9" showSpinner={false} />
         {/* Subtle Noise Overlay */}
         <div className="pointer-events-none fixed inset-0 z-[999] opacity-[0.03] mix-blend-overlay dark:opacity-[0.02]">
