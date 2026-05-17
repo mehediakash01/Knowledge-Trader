@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useGetMyTradesQuery, useUpdateBarterStatusMutation } from "@/redux/api/tradeApi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/UI/tabs";
 import { Card, CardContent } from "@/components/UI/card";
@@ -14,7 +15,8 @@ import {
   UserRound, 
   Sparkles,
   Inbox,
-  Send
+  Send,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -24,13 +26,17 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function MyTradesPage() {
   const { data: trades, isLoading } = useGetMyTradesQuery();
   const [updateStatus, { isLoading: isUpdating }] = useUpdateBarterStatusMutation();
+  const [pendingAction, setPendingAction] = useState<{ barterId: string; action: "ACCEPT" | "DECLINE" } | null>(null);
 
-  const handleAction = async (barterId: string, status: "ACCEPTED" | "REJECTED") => {
+  const handleAction = async (barterId: string, action: "ACCEPT" | "DECLINE") => {
     try {
-      await updateStatus({ barterId, status }).unwrap();
-      toast.success(`Barter ${status.toLowerCase()} successfully`);
+      setPendingAction({ barterId, action });
+      await updateStatus({ barterId, action }).unwrap();
+      toast.success(`Barter ${action === "ACCEPT" ? "accepted" : "declined"} successfully`);
     } catch (error: any) {
       toast.error(error?.data?.message || "Action failed");
+    } finally {
+      setPendingAction(null);
     }
   };
 
@@ -112,19 +118,29 @@ export default function MyTradesPage() {
 
                           <div className="flex gap-3">
                             <Button 
-                              onClick={() => handleAction(barter.id, "REJECTED")}
+                              onClick={() => handleAction(barter.id, "DECLINE")}
                               disabled={isUpdating}
                               variant="outline" 
-                              className="rounded-xl border-zinc-200 text-zinc-600 hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                              className="rounded-xl border-rose-600 text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:border-rose-500 dark:text-rose-400 dark:hover:bg-rose-950/40"
                             >
-                              <X className="mr-2 size-4" /> Reject
+                              {pendingAction?.barterId === barter.id && pendingAction.action === "DECLINE" ? (
+                                <Loader2 className="mr-2 size-4 animate-spin" />
+                              ) : (
+                                <X className="mr-2 size-4" />
+                              )}
+                              Decline
                             </Button>
                             <Button 
-                              onClick={() => handleAction(barter.id, "ACCEPTED")}
+                              onClick={() => handleAction(barter.id, "ACCEPT")}
                               disabled={isUpdating}
-                              className="rounded-xl bg-blue-600 px-6 font-bold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-700 dark:bg-cyan-500 dark:text-zinc-950 dark:hover:bg-cyan-400"
+                              className="rounded-xl border border-emerald-700 bg-emerald-600 px-6 font-semibold text-white shadow-sm shadow-emerald-600/20 hover:bg-emerald-700 focus-visible:ring-emerald-600 dark:border-emerald-500 dark:bg-emerald-500 dark:text-white dark:hover:bg-emerald-400"
                             >
-                              <Check className="mr-2 size-4" /> Accept Swap
+                              {pendingAction?.barterId === barter.id && pendingAction.action === "ACCEPT" ? (
+                                <Loader2 className="mr-2 size-4 animate-spin" />
+                              ) : (
+                                <Check className="mr-2 size-4" />
+                              )}
+                              Accept
                             </Button>
                           </div>
                         </div>
@@ -158,7 +174,7 @@ export default function MyTradesPage() {
                       </div>
                     </div>
                     <Badge variant="outline" className="rounded-full border-amber-200 bg-amber-50 text-amber-600 dark:border-amber-900/30 dark:bg-amber-900/20 dark:text-amber-400">
-                      Pending Review
+                      {barter.status}
                     </Badge>
                   </div>
                 </Card>

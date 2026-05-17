@@ -26,7 +26,7 @@ export interface IBarterRequest {
   receiverId: string;
   skillOfferedId: string;
   skillRequestedId: string;
-  status: "PENDING" | "ACCEPTED" | "REJECTED";
+  status: "PENDING" | "ACCEPTED" | "DECLINED";
   skillOffered: ITradePostSummary;
   skillRequested: ITradePostSummary;
   sender?: ITradeUserSummary;

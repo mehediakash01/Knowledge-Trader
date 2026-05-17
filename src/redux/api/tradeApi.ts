@@ -30,18 +30,23 @@ export const tradeApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["trade", "skillPost"],
+      invalidatesTags: ["trade", "skillPost", "notification"],
     }),
     updateBarterStatus: builder.mutation<
       void,
-      { barterId: string; status: "ACCEPTED" | "REJECTED" }
+      { barterId: string; action: "ACCEPT" | "DECLINE" }
     >({
       query: ({ barterId, ...payload }) => ({
-        url: `/trades/barter-request/${barterId}`,
+        url: `/trades/barter-requests/${barterId}/resolve`,
         method: "PATCH",
         body: payload,
       }),
-      invalidatesTags: ["trade", "skillPost", "user"],
+      invalidatesTags: [
+        { type: "trade", id: "MY_TRADES" },
+        "skillPost",
+        "user",
+        "notification",
+      ],
     }),
   }),
 });
