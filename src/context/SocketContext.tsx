@@ -12,6 +12,7 @@ import { toast } from "sonner";
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { baseApi } from "@/redux/api/baseApi";
+import { resolveSocketBaseUrl } from "@/lib/runtimeUrls";
 
 interface SocketContextValue {
   isConnected: boolean;
@@ -47,10 +48,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     // Dynamic import to keep the bundle lean
     import("socket.io-client").then(({ io }) => {
-      const backendUrl =
-        process.env.NEXT_PUBLIC_SOCKET_URL ||
-        process.env.NEXT_PUBLIC_API_URL?.replace("/api/v1", "") ||
-        "http://localhost:5000";
+      const backendUrl = resolveSocketBaseUrl();
 
       socket = io(backendUrl, {
         auth: { token: accessToken },

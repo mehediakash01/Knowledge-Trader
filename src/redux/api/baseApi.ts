@@ -8,6 +8,7 @@ import {
 
 import { getAccessToken } from "@/services/auth.service";
 import { logout } from "@/redux/features/auth/authSlice";
+import { resolveApiBaseUrl } from "@/lib/runtimeUrls";
 
 export const tagTypes = [
   "user",
@@ -31,7 +32,7 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: ((): BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> => {
     const rawBaseQuery = fetchBaseQuery({
-      baseUrl: process.env.NEXT_PUBLIC_API_URL,
+      baseUrl: resolveApiBaseUrl(),
       credentials: "include",
       prepareHeaders: (headers) => {
         const token = getAccessToken();
