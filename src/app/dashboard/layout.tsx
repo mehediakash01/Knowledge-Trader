@@ -115,7 +115,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   
   if (!mounted) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-slate-50 dark:bg-zinc-950">
+      <div className="flex h-screen w-full items-center justify-center bg-zinc-50 dark:bg-zinc-950">
         <div className="size-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent dark:border-cyan-400" />
       </div>
     );
@@ -123,7 +123,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <ProtectedRoute>
-      <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-slate-50 dark:bg-zinc-950">
+      <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-zinc-50 dark:bg-zinc-950">
         <DashboardNavbar onOpenMobileMenu={() => setMobileMenuOpen(true)} />
 
         <div
@@ -137,14 +137,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-50 h-screen w-[min(21rem,88vw)] border-r-2 border-zinc-800 bg-white p-4 transition-transform duration-300 ease-in-out dark:bg-zinc-950 md:hidden",
+            "fixed inset-y-0 left-0 z-50 h-screen w-[min(21rem,88vw)] border-r border-zinc-100 bg-white p-4 shadow-xl shadow-zinc-950/10 transition-transform duration-300 ease-in-out dark:border-zinc-800 dark:bg-zinc-950 md:hidden",
             mobileMenuOpen ? "translate-x-0" : "-translate-x-full",
           )}
           aria-hidden={!mobileMenuOpen}
         >
           <div className="flex h-full flex-col gap-4">
             <div className="flex items-center justify-between">
-              <div className="inline-flex items-center gap-2 rounded-xl border-2 border-zinc-800 bg-white px-3 py-2 text-sm font-bold tracking-[0.08em] text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50">
+              <div className="inline-flex items-center gap-2 rounded-xl border border-zinc-100 bg-white px-3 py-2 text-sm font-bold tracking-[0.08em] text-zinc-950 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50">
                 <span className="inline-flex size-6 items-center justify-center rounded-md bg-zinc-950 text-[0.65rem] font-semibold text-white dark:bg-zinc-50 dark:text-zinc-950">
                   KT
                 </span>
@@ -153,7 +153,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
-                className="inline-flex min-h-11 items-center justify-center rounded-xl border-2 border-zinc-800 bg-white px-3 py-2 text-zinc-950 transition-all hover:bg-zinc-100 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-zinc-100 bg-white px-3 py-2 text-zinc-950 shadow-sm transition-all hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
                 aria-label="Close dashboard menu"
               >
                 <X className="size-5" />
@@ -163,7 +163,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="inline-flex min-h-11 items-center gap-2 rounded-xl border-2 border-zinc-800 bg-white px-3 py-2 text-sm font-semibold text-zinc-950 transition-all hover:-translate-y-0.5 hover:bg-zinc-100 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-zinc-100 bg-white px-3 py-2 text-sm font-semibold text-zinc-950 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
             >
               <Home className="size-4" />
               <span>Navigate Home</span>
@@ -183,12 +183,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
-                      "flex min-h-11 items-center gap-3 rounded-xl border-2 px-3 py-2.5 text-sm font-medium transition-all",
+                      "flex min-h-11 items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all",
                       isActive
-                        ? "border-zinc-800 bg-zinc-950 text-white dark:bg-zinc-100 dark:text-zinc-950"
+                        ? "border-zinc-900 bg-zinc-900 text-white shadow-sm dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-950"
                         : item.highlight
                           ? "border-transparent bg-linear-to-r from-blue-500/10 to-cyan-400/10 text-blue-700 dark:text-cyan-300"
-                          : "border-transparent text-zinc-700 hover:border-zinc-800 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                          : "border-zinc-100 text-zinc-700 hover:border-zinc-200 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900",
                     )}
                   >
                     <item.icon className="size-4 shrink-0" />
@@ -198,7 +198,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               })}
             </nav>
 
-            <div className="mt-auto rounded-2xl border-2 border-zinc-800 bg-zinc-100 p-3 dark:bg-zinc-900">
+            <div className="mt-auto rounded-2xl border border-zinc-100 bg-zinc-50 p-3 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
               <div className="flex items-center gap-3">
                 <Avatar className="size-10 shrink-0 border border-zinc-800/10">
                   <AvatarImage src={persona?.image || undefined} alt={persona?.name || "User"} />
@@ -218,7 +218,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={handleMobileLogout}
-                className="mt-3 flex min-h-11 w-full items-center gap-3 rounded-xl border-2 border-transparent px-3 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-950/40"
+                className="mt-3 flex min-h-11 w-full items-center gap-3 rounded-xl border border-transparent px-3 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-300 dark:hover:bg-red-950/40"
               >
                 <LogOut className="size-4" />
                 Logout
@@ -227,12 +227,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </aside>
 
-        <div className="flex flex-1 flex-col md:flex-row">
-          <aside className="hidden w-full shrink-0 border-r-2 border-zinc-800 bg-white p-4 dark:bg-zinc-950 md:block md:w-64 md:p-6 lg:w-72">
+        <div className="flex flex-1 flex-col gap-4 px-4 pb-4 md:flex-row md:px-4 md:pb-4 lg:px-6 lg:pb-6">
+          <aside className="hidden w-full shrink-0 rounded-[2rem] border border-zinc-100 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 md:block md:w-64 md:p-6 lg:w-72">
             <div className="flex flex-col gap-4">
               <Link
                 href="/"
-                className="inline-flex min-h-11 items-center gap-2 rounded-xl border-2 border-zinc-800 bg-white px-3 py-2 text-sm font-semibold text-zinc-950 transition-all hover:-translate-y-0.5 hover:bg-zinc-100 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-zinc-100 bg-white px-3 py-2 text-sm font-semibold text-zinc-950 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900"
               >
                 <Home className="size-4" />
                 <span>Navigate Home</span>
@@ -251,12 +251,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                         key={item.href}
                         href={item.href}
                         className={cn(
-                          "flex min-h-11 items-center gap-3 rounded-xl border-2 px-3 py-2.5 text-sm font-medium transition-all",
+                          "flex min-h-11 items-center gap-3 rounded-xl border px-3 py-2.5 text-sm font-medium transition-all",
                           isActive
-                            ? "border-zinc-800 bg-zinc-950 text-white dark:bg-zinc-100 dark:text-zinc-950"
+                            ? "border-zinc-900 bg-zinc-900 text-white shadow-sm dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-950"
                             : item.highlight
                               ? "border-transparent bg-linear-to-r from-blue-500/10 to-cyan-400/10 text-blue-700 dark:text-cyan-300"
-                              : "border-transparent text-zinc-700 hover:border-zinc-800 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                              : "border-zinc-100 text-zinc-700 hover:border-zinc-200 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900",
                         )}
                       >
                         <item.icon className="size-4 shrink-0" />
@@ -268,10 +268,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               </div>
             </div>
           </aside>
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-10">
-            <ErrorBoundary>
-              {children}
-            </ErrorBoundary>
+          <main className="flex-1 overflow-y-auto rounded-[2rem] border border-zinc-100 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 sm:p-6 lg:p-8">
+            <ErrorBoundary>{children}</ErrorBoundary>
           </main>
         </div>
       </div>

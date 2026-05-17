@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { BadgeCheck, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
+import { BadgeCheck, Eye, ShieldCheck, Sparkles } from "lucide-react";
 
 import { Card } from "@/components/UI/card";
 import { cn } from "@/lib/utils";
@@ -95,6 +95,7 @@ export function SkillCard({ post, accessState }: SkillCardProps) {
   const visual = getCategoryVisual(post.category);
   const rating = Math.min(5, Math.max(0, post.creator.reputationScore ?? 4.8));
   const reviewCount = post._count?.reviews ?? 0;
+  const thumbnail = post.thumbnail || post.images?.[0];
 
   return (
     <motion.article
@@ -106,7 +107,7 @@ export function SkillCard({ post, accessState }: SkillCardProps) {
       <Link href={`/bazaar/${post.id}`} className="absolute inset-0 z-10" aria-label={`View ${post.title}`} />
       <Card className="h-full overflow-hidden border-white/60 bg-white/85 p-0 shadow-[0_16px_42px_-20px_rgba(15,23,42,0.35)] ring-1 ring-blue-950/5 backdrop-blur-xl transition-shadow dark:border-white/10 dark:bg-zinc-950/70 dark:shadow-[0_20px_60px_-24px_rgba(34,211,238,0.2)]">
         <div className="relative aspect-16/10 overflow-hidden">
-          <ThumbnailArt category={post.category} visual={visual} />
+          <ThumbnailArt category={post.category} visual={visual} src={thumbnail} title={post.title} />
 
           <div className="absolute inset-0 bg-linear-to-t from-zinc-950/65 via-zinc-950/10 to-transparent" />
           
@@ -125,9 +126,9 @@ export function SkillCard({ post, accessState }: SkillCardProps) {
                 Checking access
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-950/35 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/15 backdrop-blur-md">
-                <LockKeyhole className="size-3.5" />
-                Locked
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/15 backdrop-blur-md">
+                <Eye className="size-3.5" />
+                Preview
               </span>
             )}
           </div>
@@ -197,10 +198,27 @@ export function SkillCard({ post, accessState }: SkillCardProps) {
 function ThumbnailArt({
   category,
   visual,
+  src,
+  title,
 }: {
   category: string;
   visual: ReturnType<typeof getCategoryVisual>;
+  src?: string;
+  title: string;
 }) {
+  if (src) {
+    return (
+      <div className="absolute inset-0 overflow-hidden bg-zinc-900">
+        <img
+          src={src}
+          alt={`${title} thumbnail`}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-linear-to-tr from-zinc-950/10 via-transparent to-white/10" />
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(

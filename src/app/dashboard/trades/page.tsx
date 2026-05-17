@@ -12,6 +12,7 @@ import {
   X, 
   ArrowRight, 
   Clock, 
+  History,
   UserRound, 
   Sparkles,
   Inbox,
@@ -41,7 +42,7 @@ export default function MyTradesPage() {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center">Loading trades...</div>;
+    return <TradesPageSkeleton />;
   }
 
   const receivedPending = trades?.receivedBarters.filter(b => b.status === "PENDING") ?? [];
@@ -229,6 +230,41 @@ export default function MyTradesPage() {
           )}
         </TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+function TradesPageSkeleton() {
+  return (
+    <div className="space-y-8">
+      <div>
+        <div className="h-9 w-56 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800" />
+        <div className="mt-3 h-5 w-96 max-w-full animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800" />
+      </div>
+      <div className="h-11 w-full max-w-md animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+      <div className="grid gap-4">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index} className="rounded-[2rem] border border-zinc-200 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-1 items-center gap-6">
+                <div className="size-14 animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+                <div className="flex-1 space-y-3">
+                  <div className="h-4 w-48 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800" />
+                  <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+                    <div className="h-20 animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+                    <div className="hidden size-5 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800 sm:block" />
+                    <div className="h-20 animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="h-10 w-24 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+                <div className="h-10 w-24 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

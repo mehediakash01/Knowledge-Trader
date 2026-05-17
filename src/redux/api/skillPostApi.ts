@@ -16,6 +16,8 @@ export interface IGetSkillPostsParams {
   page?: number | string;
   limit?: number | string;
   creatorId?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 }
 
 export interface ICreateSkillPostPayload {
@@ -67,8 +69,30 @@ export const skillPostApi = baseApi.injectEndpoints({
       providesTags: (result) => {
         const posts = result?.data ?? [];
         return [
+          { type: "SkillPosts" as const, id: "LIST" },
           { type: "skillPost" as const, id: "LIST" },
+          ...posts.map((post) => ({ type: "SkillPosts" as const, id: post.id })),
           ...posts.map((post) => ({ type: "skillPost" as const, id: post.id })),
+        ];
+      },
+    }),
+
+    getMySkills: builder.query<ISkillPostListResponse, string>({
+      query: (creatorId) => ({
+        url: "/skill-posts",
+        method: "GET",
+        params: { creatorId, limit: 20, sortOrder: "desc" },
+      }),
+      transformResponse: (response: IApiResponse<ISkillPost[]>) => ({
+        meta: response.meta as ISkillPostPaginationMeta,
+        data: response.data,
+      }),
+      providesTags: (result, _error, creatorId) => {
+        const posts = result?.data ?? [];
+        return [
+          { type: "MySkills" as const, id: creatorId },
+          { type: "skillPost" as const, id: `creator-${creatorId}` },
+          ...posts.map((post) => ({ type: "MySkills" as const, id: post.id })),
         ];
       },
     }),
@@ -98,7 +122,7 @@ export const skillPostApi = baseApi.injectEndpoints({
         body: payload,
       }),
       transformResponse: (response: IApiResponse<ISkillPost>) => response.data,
-      invalidatesTags: [{ type: "skillPost", id: "LIST" }],
+      invalidatesTags: ["SkillPosts", "MySkills", "skillPost"],
     }),
 
     updateSkillPost: builder.mutation<
@@ -167,6 +191,7 @@ export const skillPostApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllSkillPostsQuery,
+  useGetMySkillsQuery,
   useGetCategoriesQuery,
   useGetSkillPostByIdQuery,
   useCreateSkillPostMutation,

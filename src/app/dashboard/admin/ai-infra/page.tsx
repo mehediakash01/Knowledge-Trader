@@ -39,9 +39,13 @@ export default function AdminAiInfraPage() {
                 <Card key={item.key} className="rounded-lg border-2 border-zinc-800 bg-white p-5 dark:bg-zinc-950">
                   <Icon className="size-6 text-emerald-600" />
                   <p className="mt-4 text-xs font-black uppercase tracking-[0.16em] text-zinc-500">{item.label}</p>
-                  <p className="mt-2 text-3xl font-black text-zinc-950 dark:text-zinc-50">
-                    {isLoading ? "..." : value.toLocaleString()}
-                  </p>
+                  {isLoading ? (
+                    <div className="mt-3 h-9 w-24 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800" />
+                  ) : (
+                    <p className="mt-2 text-3xl font-black text-zinc-950 dark:text-zinc-50">
+                      {value.toLocaleString()}
+                    </p>
+                  )}
                 </Card>
               );
             })}

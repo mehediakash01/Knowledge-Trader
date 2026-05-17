@@ -22,7 +22,11 @@ export const tradeApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: IApiResponse<IMyTradesResponse>) =>
         response.data,
-      providesTags: [{ type: "trade", id: "MY_TRADES" }],
+      providesTags: [
+        { type: "Trades", id: "MY_TRADES" },
+        { type: "Barters", id: "MY_TRADES" },
+        { type: "trade", id: "MY_TRADES" },
+      ],
     }),
     createBarterRequest: builder.mutation<void, any>({
       query: (payload) => ({
@@ -30,7 +34,7 @@ export const tradeApi = baseApi.injectEndpoints({
         method: "POST",
         body: payload,
       }),
-      invalidatesTags: ["trade", "skillPost", "notification"],
+      invalidatesTags: ["Trades", "Barters", "trade", "skillPost", "notification"],
     }),
     updateBarterStatus: builder.mutation<
       void,
@@ -42,6 +46,8 @@ export const tradeApi = baseApi.injectEndpoints({
         body: payload,
       }),
       invalidatesTags: [
+        "Trades",
+        "Barters",
         { type: "trade", id: "MY_TRADES" },
         "skillPost",
         "user",

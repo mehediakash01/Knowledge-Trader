@@ -50,6 +50,9 @@ export function Navbar() {
 
   const ktBalance = user?.ktBalance ?? 0;
 
+  const getDashboardHref = (path: string) =>
+    user ? path : `/login?redirect=${encodeURIComponent(path)}`;
+
   const handleLogout = () => {
     dispatch(logout());
     toast.success("Logged out successfully");
@@ -82,7 +85,7 @@ export function Navbar() {
               >
                 {item.label}
                 {isActive && (
-                  <span className="absolute inset-x-4 -bottom-[19px] h-0.5 bg-blue-600 shadow-[0_-2px_10px_rgba(37,99,235,0.8)] dark:bg-cyan-400 dark:shadow-[0_-2px_10px_rgba(34,211,238,0.8)]" />
+                  <span className="absolute inset-x-4 -bottom-4.75 h-0.5 bg-blue-600 shadow-[0_-2px_10px_rgba(37,99,235,0.8)] dark:bg-cyan-400 dark:shadow-[0_-2px_10px_rgba(34,211,238,0.8)]" />
                 )}
               </Link>
             );
@@ -122,8 +125,12 @@ export function Navbar() {
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard">Dashboard</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>My Trades</DropdownMenuItem>
-                  <DropdownMenuItem>Wallet</DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={getDashboardHref("/dashboard/trades")}>Manage Trades</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={getDashboardHref("/dashboard/my-skills")}>My Created Skills</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
                     Logout
@@ -166,6 +173,12 @@ export function Navbar() {
                   <DropdownMenuItem>
                     <UserRound className="size-4" />
                     User Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={getDashboardHref("/dashboard/trades")}>Manage Trades</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={getDashboardHref("/dashboard/my-skills")}>My Created Skills</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleLogout}>
                     Logout

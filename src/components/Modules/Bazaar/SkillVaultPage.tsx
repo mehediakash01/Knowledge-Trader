@@ -625,7 +625,7 @@ function QuestionItem({ question, isOwner, postId }: { question: IQuestion; isOw
               />
               <div className="flex gap-2">
                 <Button type="submit" size="sm" disabled={isLoading || !answerBody.trim()}>
-                  {isLoading ? "Posting..." : "Post Answer"}
+                  {isLoading ? <Loader2 className="size-4 animate-spin" /> : "Post Answer"}
                 </Button>
                 <Button type="button" size="sm" variant="ghost" onClick={() => setIsAnswering(false)}>Cancel</Button>
               </div>

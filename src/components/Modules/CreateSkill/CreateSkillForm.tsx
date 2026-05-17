@@ -206,7 +206,7 @@ export function CreateSkillForm() {
           resourceLinks: data.resourceLinks || []
         },
       }).unwrap();
-      router.push(`/bazaar/${result.id}`);
+      router.push("/dashboard/my-skills");
     } catch (e: unknown) {
       const msg = (e as { data?: { message?: string } })?.data?.message ?? "Failed to publish skill. Please try again.";
       setGlobalError(msg);

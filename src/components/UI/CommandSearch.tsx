@@ -2,7 +2,10 @@
 
 import { Search, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
+import { Button } from "@/components/UI/button";
 import { Input } from "@/components/UI/input";
 import { cn } from "@/lib/utils";
 
@@ -11,8 +14,19 @@ interface CommandSearchProps {
 }
 
 export function CommandSearch({ className }: CommandSearchProps) {
+  const router = useRouter();
+  const [search, setSearch] = useState("");
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const query = search.trim();
+    const params = query ? `?search=${encodeURIComponent(query)}` : "";
+    router.push(`/dashboard/bazaar${params}`);
+  };
+
   return (
-    <motion.div
+    <motion.form
+      onSubmit={handleSubmit}
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.25, duration: 0.55, ease: "easeOut" }}
@@ -25,6 +39,8 @@ export function CommandSearch({ className }: CommandSearchProps) {
         <Search className="size-5 shrink-0 text-blue-600 dark:text-cyan-300" />
         <Input
           aria-label="Search skills"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
           placeholder="Search skills, mentors, or trade offers..."
           className="h-10 border-0 bg-transparent px-0 text-base shadow-none placeholder:text-zinc-500 focus-visible:ring-0 dark:placeholder:text-zinc-500"
         />
@@ -32,7 +48,14 @@ export function CommandSearch({ className }: CommandSearchProps) {
           <Sparkles className="size-3.5 text-cyan-400" />
           AI
         </div>
+        <Button
+          type="submit"
+          size="sm"
+          className="h-10 rounded-xl bg-blue-600 px-4 text-white hover:bg-blue-700 dark:bg-cyan-400 dark:text-zinc-950 dark:hover:bg-cyan-300"
+        >
+          Search
+        </Button>
       </div>
-    </motion.div>
+    </motion.form>
   );
 }

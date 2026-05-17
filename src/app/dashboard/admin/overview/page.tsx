@@ -57,9 +57,13 @@ export default function AdminOverviewPage() {
                       <Icon className="size-5" />
                     </span>
                   </div>
-                  <div className="mt-5 text-4xl font-black text-zinc-950 dark:text-zinc-50">
-                    {isLoading ? "..." : value.toLocaleString()}
-                  </div>
+                  {isLoading ? (
+                    <div className="mt-5 h-10 w-28 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800" />
+                  ) : (
+                    <div className="mt-5 text-4xl font-black text-zinc-950 dark:text-zinc-50">
+                      {value.toLocaleString()}
+                    </div>
+                  )}
                 </Card>
               );
             })}

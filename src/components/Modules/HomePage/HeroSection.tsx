@@ -3,6 +3,9 @@
 import { ArrowRight, BadgeCheck, Brain, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+
+import { useAppSelector } from "@/redux/hooks";
 
 import { Button } from "@/components/UI/button";
 import { CommandSearch } from "@/components/UI/CommandSearch";
@@ -15,9 +18,15 @@ const pathTransition = {
 };
 
 export function HeroSection() {
+  const router = useRouter();
+  const user = useAppSelector((state) => state.auth.user);
+
+  const getDashboardHref = (path: string) =>
+    user ? path : `/login?redirect=${encodeURIComponent(path)}`;
+
   return (
     <section className="relative overflow-hidden bg-slate-50 dark:bg-zinc-950">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/70 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-cyan-400/70 to-transparent" />
       <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:px-8 lg:py-24">
         <div className="mx-auto max-w-3xl text-center lg:mx-0 lg:text-left">
           <motion.div
@@ -60,18 +69,22 @@ export function HeroSection() {
             className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center lg:justify-start"
           >
             <Button
+              type="button"
               size="lg"
               className="h-11 bg-blue-600 px-5 text-white shadow-xl shadow-blue-600/20 hover:bg-blue-700 dark:bg-cyan-400 dark:text-zinc-950 dark:hover:bg-cyan-300"
+              onClick={() => router.push(getDashboardHref("/dashboard/trades"))}
             >
               Start Trading
               <ArrowRight className="size-4" />
             </Button>
             <Button
+              type="button"
               size="lg"
               variant="outline"
+              onClick={() => router.push(getDashboardHref("/dashboard/my-skills"))}
               className="h-11 border-zinc-300 bg-white/70 px-5 backdrop-blur dark:border-white/10 dark:bg-zinc-900/70"
             >
-              Browse Teachers
+              My Created Skills
             </Button>
           </motion.div>
         </div>
@@ -88,7 +101,7 @@ function KnowledgeFlow() {
       initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.18, duration: 0.7, ease: "easeOut" }}
-      className="relative mx-auto aspect-square w-full max-w-[560px]"
+      className="relative mx-auto aspect-square w-full max-w-140"
       aria-hidden="true"
     >
       <div className="absolute inset-8 rounded-full border border-blue-500/10 bg-white/65 shadow-2xl shadow-blue-950/10 backdrop-blur-2xl dark:border-cyan-300/10 dark:bg-zinc-900/60 dark:shadow-cyan-950/20" />

@@ -1,4 +1,4 @@
-export const BAZAAR_DEFAULT_LIMIT = 12;
+export const BAZAAR_DEFAULT_LIMIT = 8;
 export const BAZAAR_MAX_PRICE = 1000;
 
 export interface BazaarFilterState {
@@ -41,12 +41,13 @@ export function parseBazaarSearchParams(params: {
   maxPrice?: string | string[];
   page?: string | string[];
   limit?: string | string[];
+  search?: string | string[];
 }): BazaarFilterState {
   const minPrice = Math.max(0, toNumber(params.minPrice, 0));
   const maxPrice = Math.max(minPrice, toNumber(params.maxPrice, BAZAAR_MAX_PRICE));
 
   return {
-    searchTerm: toStringValue(params.searchTerm),
+    searchTerm: toStringValue(params.searchTerm || params.search),
     categories: normalizeCategoryList(params.category),
     minPrice,
     maxPrice,

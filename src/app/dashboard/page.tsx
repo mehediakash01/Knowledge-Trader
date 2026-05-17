@@ -77,7 +77,7 @@ export default function DashboardOverviewPage() {
         
         <div className="mt-4 flex flex-col gap-3">
           {isLoading ? (
-            <p className="text-sm text-zinc-500">Loading your vault...</p>
+            <RecentPurchasesSkeleton />
           ) : completedPurchases.length > 0 ? (
             completedPurchases.slice(0, 3).map((trade) => (
               <div key={trade.id} className="flex items-center justify-between rounded-xl bg-slate-50 p-4 dark:bg-zinc-950">
@@ -105,6 +105,25 @@ export default function DashboardOverviewPage() {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function RecentPurchasesSkeleton() {
+  return (
+    <div className="space-y-3">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div key={index} className="flex items-center justify-between rounded-xl bg-slate-50 p-4 dark:bg-zinc-950">
+          <div className="flex items-center gap-4">
+            <div className="size-10 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
+            <div className="space-y-2">
+              <div className="h-4 w-52 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800" />
+              <div className="h-3 w-16 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800" />
+            </div>
+          </div>
+          <div className="size-8 animate-pulse rounded-full bg-zinc-200 dark:bg-zinc-800" />
+        </div>
+      ))}
     </div>
   );
 }
