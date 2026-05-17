@@ -16,6 +16,11 @@ export const tagTypes = [
   "trade",
   "review",
   "notification",
+  "adminOverview",
+  "adminUsers",
+  "adminBazaar",
+  "adminDisputes",
+  "adminAiInfra",
 ] as const;
 
 export const baseApi = createApi({

@@ -8,6 +8,7 @@ import {
   LogOut,
   Menu,
   Settings,
+  ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -48,7 +49,7 @@ export function DashboardNavbar({ onOpenMobileMenu }: DashboardNavbarProps) {
   const persona = liveUser ?? user;
   const primaryExpertise = persona?.expertise?.[0];
   const expertiseLabel = primaryExpertise
-    ? `${primaryExpertise.level} • ${primaryExpertise.name}`
+    ? `${primaryExpertise.level} - ${primaryExpertise.name}`
     : "Unranked";
 
   useEffect(() => {
@@ -184,8 +185,19 @@ export function DashboardNavbar({ onOpenMobileMenu }: DashboardNavbarProps) {
                   role="menuitem"
                 >
                   <Settings className="size-4" />
-                  Settings
+                  Profile Settings
                 </Link>
+                {persona?.role === "ADMIN" ? (
+                  <Link
+                    href="/dashboard/admin/overview"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold text-zinc-900 transition-colors hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-900"
+                    role="menuitem"
+                  >
+                    <ShieldCheck className="size-4" />
+                    Admin Console
+                  </Link>
+                ) : null}
                 <button
                   type="button"
                   onClick={handleLogout}

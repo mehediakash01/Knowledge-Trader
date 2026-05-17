@@ -22,6 +22,7 @@ interface IBackendUser {
   name?: string;
   email?: string;
   role?: string;
+  status?: "ACTIVE" | "SUSPENDED" | "BANNED";
   image?: string;
   bio?: string | null;
   tagline?: string | null;
@@ -46,6 +47,7 @@ const normalizeUser = (user: IBackendUser): IUser => ({
   name: user.name,
   email: user.email,
   role: user.role,
+  status: user.status,
   image: user.image,
   bio: user.bio,
   tagline: user.tagline,

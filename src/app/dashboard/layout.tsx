@@ -6,14 +6,18 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   ArrowLeftRight,
   BarChart2,
-  BarChart3,
+  Bot,
   BookOpen,
+  FileWarning,
   LogOut,
   X,
   Home,
   LayoutDashboard,
+  Scale,
   Settings,
+  ShieldCheck,
   Sparkles,
+  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -22,6 +26,7 @@ import { ErrorBoundary } from "@/components/Shared/ErrorBoundary";
 import { DashboardNavbar } from "@/components/Layouts/DashboardNavbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/UI/avatar";
 import { cn } from "@/lib/utils";
+import { useGetMeQuery } from "@/redux/api/authApi";
 import { baseApi } from "@/redux/api/baseApi";
 import { logout } from "@/redux/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -41,16 +46,28 @@ const dashboardSidebarItems: DashboardSidebarItem[] = [
   { href: "/dashboard/matchmaker", label: "AI Matchmaker", icon: Sparkles, highlight: true },
   { href: "/dashboard/analytics", label: "AI Analytics", icon: BarChart2, highlight: true },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
-  { href: "/dashboard/admin", label: "Platform Stats", icon: BarChart3 },
+];
+
+const adminSidebarItems: DashboardSidebarItem[] = [
+  { href: "/dashboard/admin/overview", label: "Overview Command Center", icon: ShieldCheck },
+  { href: "/dashboard/admin/users", label: "User Management Matrix", icon: Users },
+  { href: "/dashboard/admin/bazaar", label: "Bazaar Content Moderation", icon: FileWarning },
+  { href: "/dashboard/admin/disputes", label: "Barter Ledger & Escrow Disputes", icon: Scale },
+  { href: "/dashboard/admin/ai-infra", label: "AI Metrics & Token Tracker", icon: Bot, highlight: true },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
+  const { data: liveUser } = useGetMeQuery(undefined, { skip: !user });
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const persona = liveUser ?? user;
+  const sidebarItems = persona?.role === "ADMIN"
+    ? [...dashboardSidebarItems, ...adminSidebarItems]
+    : dashboardSidebarItems;
 
   const getInitials = (name?: string, email?: string) => {
     const source = name || email || "KT";
@@ -157,7 +174,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </h2>
 
             <nav className="space-y-1">
-              {dashboardSidebarItems.map((item) => {
+              {sidebarItems.map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
                 return (
@@ -184,17 +201,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <div className="mt-auto rounded-2xl border-2 border-zinc-800 bg-zinc-100 p-3 dark:bg-zinc-900">
               <div className="flex items-center gap-3">
                 <Avatar className="size-10 shrink-0 border border-zinc-800/10">
-                  <AvatarImage src={user?.image || undefined} alt={user?.name || "User"} />
+                  <AvatarImage src={persona?.image || undefined} alt={persona?.name || "User"} />
                   <AvatarFallback className="bg-zinc-900 text-xs font-semibold text-zinc-50 dark:bg-zinc-100 dark:text-zinc-950">
-                    {getInitials(user?.name, user?.email)}
+                    {getInitials(persona?.name, persona?.email)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-zinc-950 dark:text-zinc-50">
-                    {user?.name || "Profile"}
+                    {persona?.name || "Profile"}
                   </p>
                   <p className="truncate text-xs text-zinc-500 dark:text-zinc-400">
-                    {user?.email || "Signed in"}
+                    {persona?.email || "Signed in"}
                   </p>
                 </div>
               </div>
@@ -226,21 +243,27 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                   Control Center
                 </h2>
                 <nav className="space-y-1">
-                  {dashboardSidebarItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cn(
-                        "flex min-h-11 items-center gap-3 rounded-xl border-2 border-transparent px-3 py-2.5 text-sm font-medium transition-all",
-                        item.highlight
-                          ? "bg-linear-to-r from-blue-500/10 to-cyan-400/10 text-blue-700 dark:text-cyan-300"
-                          : "text-zinc-700 hover:border-zinc-800 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
-                      )}
-                    >
-                      <item.icon className="size-4 shrink-0" />
-                      <span className="truncate">{item.label}</span>
-                    </Link>
-                  ))}
+                  {sidebarItems.map((item) => {
+                    const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                          "flex min-h-11 items-center gap-3 rounded-xl border-2 px-3 py-2.5 text-sm font-medium transition-all",
+                          isActive
+                            ? "border-zinc-800 bg-zinc-950 text-white dark:bg-zinc-100 dark:text-zinc-950"
+                            : item.highlight
+                              ? "border-transparent bg-linear-to-r from-blue-500/10 to-cyan-400/10 text-blue-700 dark:text-cyan-300"
+                              : "border-transparent text-zinc-700 hover:border-zinc-800 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+                        )}
+                      >
+                        <item.icon className="size-4 shrink-0" />
+                        <span className="truncate">{item.label}</span>
+                      </Link>
+                    );
+                  })}
                 </nav>
               </div>
             </div>
