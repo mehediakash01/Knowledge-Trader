@@ -16,7 +16,6 @@ import { useCreateBarterRequestMutation } from "@/redux/api/tradeApi";
 import { useAssessTradeValueMutation } from "@/redux/api/aiApi";
 import { useAppSelector } from "@/redux/hooks";
 import { ISkillPost } from "@/types";
-import { ScrollArea } from "@/components/UI/scroll-area";
 import { cn } from "@/lib/utils";
 import { 
   ArrowLeftRight, 
@@ -121,24 +120,23 @@ export function BarterModal({ targetSkill, isOpen, onOpenChange }: BarterModalPr
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl overflow-hidden rounded-[2rem] border-zinc-200 bg-white p-0 dark:border-zinc-800 dark:bg-zinc-950">
-        {/* Header */}
-        <div className="bg-linear-to-r from-blue-600 to-indigo-600 p-8 text-white">
-          <DialogHeader>
-            <div className="mb-4 flex size-12 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md">
+      <DialogContent className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-[2rem] border-zinc-200 bg-white p-0 dark:border-zinc-800 dark:bg-zinc-950">
+        <div className="flex shrink-0 items-start justify-between gap-4 border-b border-zinc-100 p-6 dark:border-zinc-800">
+          <DialogHeader className="space-y-2">
+            <div className="flex size-12 items-center justify-center rounded-2xl bg-linear-to-r from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-600/20">
               <ArrowLeftRight className="size-6" />
             </div>
-            <DialogTitle className="text-2xl font-bold text-white">Propose a Knowledge Swap</DialogTitle>
-            <DialogDescription className="text-blue-100">
+            <DialogTitle className="text-2xl font-bold text-zinc-900 dark:text-white">Propose a Knowledge Swap</DialogTitle>
+            <DialogDescription className="max-w-xl text-zinc-500 dark:text-zinc-400">
               Exchange your skills for &quot;{targetSkill.title}&quot;. No tokens needed, just pure value.
             </DialogDescription>
           </DialogHeader>
         </div>
 
-        <div className="p-6">
-          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500">Your Skills</h3>
-          
-          <ScrollArea className="h-[260px] pr-4">
+        <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-6 py-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800 dark:scrollbar-thumb-zinc-700">
+          <section>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Your Skills</h3>
+
             {isLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => (
@@ -151,7 +149,7 @@ export function BarterModal({ targetSkill, isOpen, onOpenChange }: BarterModalPr
                   <Sparkles className="size-8" />
                 </div>
                 <h4 className="text-lg font-bold text-zinc-900 dark:text-white">Knowledge Needed</h4>
-                <p className="mt-2 max-w-[280px] text-sm text-zinc-500">
+                <p className="mt-2 max-w-70 text-sm text-zinc-500">
                   You need to share knowledge to barter knowledge. Create your first skill to start swapping!
                 </p>
                 <Button 
@@ -191,86 +189,84 @@ export function BarterModal({ targetSkill, isOpen, onOpenChange }: BarterModalPr
                 ))}
               </div>
             )}
-          </ScrollArea>
+          </section>
 
-          {/* AI Trade Value Advisor Panel */}
-          <AnimatePresence>
-            {selectedSkill && (
-              <motion.div
-                initial={{ opacity: 0, y: 12, height: 0 }}
-                animate={{ opacity: 1, y: 0, height: "auto" }}
-                exit={{ opacity: 0, y: 8, height: 0 }}
-                className="mt-5 overflow-hidden"
-              >
-                {isAssessing ? (
-                  <div className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900">
-                    <Loader2 className="size-5 animate-spin text-blue-500" />
-                    <div>
-                      <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-                        AI is analyzing trade fairness...
-                      </p>
-                      <p className="text-xs text-zinc-500">Evaluating skill value &amp; category alignment</p>
+          <section>
+            <AnimatePresence>
+              {selectedSkill && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
+                  exit={{ opacity: 0, y: 8, height: 0 }}
+                  className="overflow-hidden"
+                >
+                  {isAssessing ? (
+                    <div className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900">
+                      <Loader2 className="size-5 animate-spin text-blue-500" />
+                      <div>
+                        <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                          AI is analyzing trade fairness...
+                        </p>
+                        <p className="text-xs text-zinc-500">Evaluating skill value &amp; category alignment</p>
+                      </div>
                     </div>
-                  </div>
-                ) : tradeAssessment && verdictConfig ? (
-                  <div className={cn("rounded-2xl border p-4", verdictConfig.bg, verdictConfig.border)}>
-                    {/* Verdict Header */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="size-4 text-blue-500" />
-                        <span className="text-xs font-bold uppercase tracking-wider text-zinc-500">
-                          AI Trade Advisor
+                  ) : tradeAssessment && verdictConfig ? (
+                    <div className={cn("rounded-2xl border p-4", verdictConfig.bg, verdictConfig.border)}>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="size-4 text-blue-500" />
+                          <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                            AI Trade Advisor
+                          </span>
+                        </div>
+                        <span className={cn("rounded-full px-3 py-1 text-xs font-bold", verdictConfig.bg, verdictConfig.color, "border", verdictConfig.border)}>
+                          {tradeAssessment.label}
                         </span>
                       </div>
-                      <span className={cn("rounded-full px-3 py-1 text-xs font-bold", verdictConfig.bg, verdictConfig.color, "border", verdictConfig.border)}>
-                        {tradeAssessment.label}
-                      </span>
-                    </div>
 
-                    {/* Value Bars */}
-                    <div className="mt-4 grid grid-cols-2 gap-3">
-                      <div>
-                        <p className="mb-1 text-xs font-medium text-zinc-500 truncate">Your Offer</p>
-                        <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${tradeAssessment.offeredScore}%` }}
-                            transition={{ duration: 0.6, ease: "easeOut" }}
-                            className="h-full rounded-full bg-blue-500"
-                          />
+                      <div className="mt-4 grid grid-cols-2 gap-3">
+                        <div>
+                          <p className="mb-1 truncate text-xs font-medium text-zinc-500 dark:text-zinc-400">Your Offer</p>
+                          <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${tradeAssessment.offeredScore}%` }}
+                              transition={{ duration: 0.6, ease: "easeOut" }}
+                              className="h-full rounded-full bg-blue-500"
+                            />
+                          </div>
+                          <p className="mt-1 text-right text-xs font-bold text-blue-600">{tradeAssessment.offeredScore}/100</p>
                         </div>
-                        <p className="mt-1 text-right text-xs font-bold text-blue-600">{tradeAssessment.offeredScore}/100</p>
-                      </div>
-                      <div>
-                        <p className="mb-1 text-xs font-medium text-zinc-500 truncate">Requested</p>
-                        <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${tradeAssessment.requestedScore}%` }}
-                            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-                            className="h-full rounded-full bg-indigo-500"
-                          />
+                        <div>
+                          <p className="mb-1 truncate text-xs font-medium text-zinc-500 dark:text-zinc-400">Requested</p>
+                          <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${tradeAssessment.requestedScore}%` }}
+                              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+                              className="h-full rounded-full bg-indigo-500"
+                            />
+                          </div>
+                          <p className="mt-1 text-right text-xs font-bold text-indigo-600">{tradeAssessment.requestedScore}/100</p>
                         </div>
-                        <p className="mt-1 text-right text-xs font-bold text-indigo-600">{tradeAssessment.requestedScore}/100</p>
                       </div>
-                    </div>
 
-                    {/* AI Reasoning */}
-                    <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                      {tradeAssessment.reasoning}
-                    </p>
-                  </div>
-                ) : null}
-              </motion.div>
-            )}
-          </AnimatePresence>
+                      <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                        {tradeAssessment.reasoning}
+                      </p>
+                    </div>
+                  ) : null}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </section>
         </div>
 
-        <DialogFooter className="border-t border-zinc-100 bg-zinc-50/50 p-6 dark:border-zinc-800 dark:bg-zinc-900/50">
+        <div className="flex shrink-0 items-center justify-end gap-3 border-t border-zinc-800 bg-zinc-900/50 p-6">
           <Button 
             variant="ghost" 
             onClick={() => onOpenChange(false)}
-            className="rounded-xl"
+            className="rounded-xl text-zinc-300 hover:bg-zinc-800 hover:text-white"
           >
             Cancel
           </Button>
@@ -282,10 +278,10 @@ export function BarterModal({ targetSkill, isOpen, onOpenChange }: BarterModalPr
             {isCreating ? (
               <><Loader2 className="mr-2 size-4 animate-spin" />Sending...</>
             ) : (
-              "Confirm Proposal"
+              "Send Request"
             )}
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
